@@ -1,0 +1,3 @@
+include ':fullstory-segment-middleware'
+include ':demo'
+rootProject.name = "FullstorySegmentMiddleware"
