@@ -26,22 +26,22 @@ public class FullStorySegmentMiddleware implements Middleware {
     public boolean enableGroupTraitsAsUserVars = false;
     public boolean enableFSSessionURLInEvents = true;
     public boolean enableSendScreenAsEvents = false;
-    public boolean whitelistAllTrackEvents = false;
-    private ArrayList<String> whitelistedEvents;
+    public boolean allowlistAllTrackEvents = false;
+    private ArrayList<String> allowlistedEvents;
 
 
     private final String TAG = "FullStoryMiddleware";
 
     /**
-     * Initialize FullStory middle ware with application context, segemntTag, and whitelisted events.
+     * Initialize FullStory middle ware with application context, segemntTag, and allowlisted events.
      * This middleware will enable Segment APIs to be passed into FullStory session replay, for more information go to: https://help.fullstory.com/hc/en-us/sections/360007387073-Native-Mobile
      *
      * @param context         Application context that's passed in to Segment Analytics builder
      * @param segmentTag      Segment tag if not set this should be the same as segment write key
-     * @param whitelistEvents whitelist any events that you would like to be passed to FullStory automatically
+     * @param allowlistEvents allowlist any events that you would like to be passed to FullStory automatically
      */
-    public FullStorySegmentMiddleware(Context context, String segmentTag, ArrayList<String> whitelistEvents) {
-        this.whitelistedEvents = whitelistEvents;
+    public FullStorySegmentMiddleware(Context context, String segmentTag, ArrayList<String> allowlistEvents) {
+        this.allowlistedEvents = allowlistEvents;
 
         // Analytics reset does not use middleware, so we need to listen to when the userID becomes null in shared preference and call anonymize to logout the user properly
         SharedPreferences sharedPreferences = getSegmentSharedPreferences(context, segmentTag);
@@ -59,7 +59,7 @@ public class FullStorySegmentMiddleware implements Middleware {
 
     /**
      * Initialize FullStory middle ware with application context, segemntTag.
-     * With no whitelisted events, no Segment track events will be passed to FullStory session replay.
+     * With no allowlisted events, no Segment track events will be passed to FullStory session replay.
      * For more information go to: https://help.fullstory.com/hc/en-us/sections/360007387073-Native-Mobile
      *
      * @param context    Application context that's passed in to Segment Analytics builder
@@ -67,7 +67,7 @@ public class FullStorySegmentMiddleware implements Middleware {
      */
     public FullStorySegmentMiddleware(Context context, String segmentTag) {
         this(context, segmentTag, new ArrayList<>());
-        Log.i(TAG, "no events whitelisted, unless enabled: whitelistAllTrackEvents, Segment track events will not be forward to FullStory!");
+        Log.i(TAG, "no events allowlisted, unless enabled: allowlistAllTrackEvents, Segment track events will not be forward to FullStory!");
     }
 
     @Override
@@ -109,7 +109,7 @@ public class FullStorySegmentMiddleware implements Middleware {
 
             case track:
                 TrackPayload trackPayload = (TrackPayload) payload;
-                if (this.whitelistAllTrackEvents || this.whitelistedEvents.indexOf(trackPayload.event()) != -1) {
+                if (this.allowlistAllTrackEvents || this.allowlistedEvents.indexOf(trackPayload.event()) != -1) {
                     FS.event(trackPayload.event(), trackPayload.properties());
                 }
                 break;
