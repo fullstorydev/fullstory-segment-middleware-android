@@ -33,7 +33,7 @@ public class FullStorySegmentMiddleware implements Middleware {
     private final String TAG = "FullStoryMiddleware";
 
     /**
-     * Initialize FullStory middle ware with application context, segemntTag, and allowlisted events.
+     * Initialize FullStory middleware with application context, segmentTag, and allowlisted events.
      * This middleware will enable Segment APIs to be passed into FullStory session replay, for more information go to: https://help.fullstory.com/hc/en-us/sections/360007387073-Native-Mobile
      *
      * @param context         Application context that's passed in to Segment Analytics builder
@@ -58,7 +58,7 @@ public class FullStorySegmentMiddleware implements Middleware {
     }
 
     /**
-     * Initialize FullStory middle ware with application context, segemntTag.
+     * Initialize FullStory middle ware with application context, segmentTag.
      * With no allowlisted events, no Segment track events will be passed to FullStory session replay.
      * For more information go to: https://help.fullstory.com/hc/en-us/sections/360007387073-Native-Mobile
      *
@@ -119,6 +119,10 @@ public class FullStorySegmentMiddleware implements Middleware {
                 break;
         }
 
+        // Only override the payload to insert current FullStory URL if:
+        // - is Track or Screen event
+        // - enableFSSessionURLInEvents is true: enable FS session URL as part of the track/screen event properties
+        // if enabled you will receive at your destination events with FS URL added
         Map<String, Object> context = new LinkedHashMap<>(payload.context());
         if (this.enableFSSessionURLInEvents) {
             newPayload = getNewPayloadWithFSURL(payload, context);
