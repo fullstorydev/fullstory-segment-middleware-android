@@ -26,9 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class FullStorySegmentMiddleware implements Middleware {
@@ -172,32 +170,28 @@ public class FullStorySegmentMiddleware implements Middleware {
         return null;
     }
 
-    private Map<String,Object> getSuffixedProps (Map<String, Object> props){
+    private Map<String, Object> getSuffixedProps (Map<?, ?> props){
+        // transform props to comply with FS custom events requirement
+
         Map<String, Object> mutableProps = new HashMap<>();
-        for (Map.Entry<String,Object> entry : props.entrySet()) {
+        for (Map.Entry<?, ?> entry : props.entrySet()) {
+            // We should only be getting String type keys, but parse the map to make sure the keys are all String
+            String key =  String.valueOf(entry.getKey());
             Object item =  entry.getValue();
-            String key =  entry.getKey();
+
+            // Segment will fail too with circular dependency, but check anyway so we do not fail
+            if(item.equals(props)) continue;
 
             if (item instanceof Map) {
-                // We should only get String keys, parse the map to make sure the keys are all of string type, before recursively calling getSuffixedProps to parse nested maps
-                Map<String, Object> tempMap = new HashMap<>();
-                for (Map.Entry<?,?> e : ((Map<?,?>) item).entrySet()) {
-                    if(e.getKey() instanceof String){
-                        tempMap.put(String.valueOf(e.getKey()), e.getValue());
-                    }
-                }
-                mutableProps.put(key.replaceAll("_",""), this.getSuffixedProps(tempMap));
+                // recursively calling getSuffixedProps to parse nested maps
+                mutableProps.put(key.replaceAll("_",""), this.getSuffixedProps((Map<?,?>) item));
             } else if (item.getClass().isArray()) {
                 // if it's of array type (but not iterable)
                 ArrayList<Object> list = new ArrayList<>(Arrays.asList(this.getArrayObjectFromArray(item)));
-                Map<String, Object> tempMap = this.getMapFromIterable(list, key);
+                Map<String, Object> tempMap = this.getMapFromIterable(key, list);
                 this.appendObjectToMap(mutableProps, "", tempMap);
             } else if (item instanceof Iterable) {
-                ArrayList<Object> list = new ArrayList<>();
-                for(Object i: (Iterable<?>) item){
-                    list.add(i);
-                }
-                Map<String, Object> tempMap = this.getMapFromIterable(list, key);
+                Map<String, Object> tempMap = this.getMapFromIterable(key, (Iterable<?>) item);
                 this.appendObjectToMap(mutableProps, "", tempMap);
             } else {
                 // if this is not a dictionary or array, then treat it like simple values, if data falls outside of these, we don't try to infer anything and just send as is to the server
@@ -207,47 +201,37 @@ public class FullStorySegmentMiddleware implements Middleware {
 
         }
 
-
         return mutableProps;
     }
 
     private void appendObjectToMap (Map<String, Object> map, String key, Object obj){
-        // umbrella function to handle 3 possible object input, if not a dict or array then we will treat the object as "simple"
+        // umbrella function to handle 3 possible object input, if not a dict or array then we will treat the object as "simple" and try to parse suffix, if failed then keep them as-is
+        if(obj == null) return;
         if (obj.getClass().isArray()) {
             ArrayList<Object> list = new ArrayList<>(Arrays.asList(this.getArrayObjectFromArray(obj)));
-            this.appendArrayObjectToMap(map, key, list);
+            this.appendIterableObjectToMap(map, key, list);
         } else if (obj instanceof Iterable){
-            ArrayList<Object> list = new ArrayList<>();
-            for(Object i: (Iterable<?>) obj){
-                list.add(i);
-            }
-            this.appendArrayObjectToMap(map, key, list);
+            this.appendIterableObjectToMap(map, key, (Iterable<?>) obj);
         } else if (obj instanceof Map) {
-            Map<String, Object> tempMap = new HashMap<>();
-            for (Map.Entry<?,?> e : ((Map<?,?>) obj).entrySet()) {
-//                if(e.getKey() instanceof String){
-                    tempMap.put(String.valueOf(e.getKey()), e.getValue());
-//                }
-            }
-            this.appendMapObjectToMap(map, key, tempMap);
+            this.appendMapObjectToMap(map, key, (Map<?,?>) obj);
         } else {
             this.appendSimpleObjectToMap(map, key, obj);
         }
     }
 
-    private void appendArrayObjectToMap(Map<String, Object> map, String key, ArrayList<Object> arr) {
+    private void appendIterableObjectToMap(Map<String, Object> map, String key, Iterable<?> arr) {
         for(Object obj: arr)
             this.appendObjectToMap(map, key, obj);
     }
 
-    private void appendMapObjectToMap(Map<String, Object> map, String key, Map<String,Object> map2){
-        // when adding a parsed dict into the result dict, emurate and add each object
-        for (String k: map2.keySet()) {
+    private void appendMapObjectToMap(Map<String, Object> map, String key, Map<?,?> map2){
+        // when adding a parsed dict into the result dict, enumerate and add each object
+        for (Object k: map2.keySet()) {
             String nestedKey = "";
             if (key.length() > 0) {
                 nestedKey = key + "." + k;
             } else {
-                nestedKey = k;
+                nestedKey = String.valueOf(k);
             }
             this.appendObjectToMap(map, nestedKey, map2.get(k));
         }
@@ -319,21 +303,23 @@ public class FullStorySegmentMiddleware implements Middleware {
         return resultArr;
     }
 
-    private Map<String, Object> getMapFromIterable(Iterable<Object> arr, String key) {
+    private Map<String, Object> getMapFromIterable(String key, Iterable<?> arr) {
         Map<String, Object> resultMap = new HashMap<>();
-
         for (Object item : arr) {
+            // some Iterables return itself in forEach, prevent circular dependency or infinite loop
+            if(item.equals(arr)) continue;
+
             if (item instanceof Map) {
                 // if array of maps, we then loop through all maps, flatten out each key/val into arrays, we will loose the object association but it allows user to search for each key/val in the array in FS (i.e. searching for one product when array of products are sent)
-                Map<String, Object> tempMap = this.getSuffixedProps((Map<String, Object>) item);
+                Map<String, Object> tempMap = this.getSuffixedProps((Map<?, ?>) item);
                 this.appendObjectToMap(resultMap, key, tempMap);
             } else if (item.getClass().isArray()) {
                 // TODO: Segment spec should not allow nested array properties, ignore for now, but we should handle it eventually
                 ArrayList<Object> list = new ArrayList<>(Arrays.asList(this.getArrayObjectFromArray(item)));
-                Map<String, Object> tempMap = this.getMapFromIterable(list, key);
+                Map<String, Object> tempMap = this.getMapFromIterable(key, list);
                 this.appendObjectToMap(resultMap, "", tempMap);
             } else if(item instanceof Iterable){
-                Map<String, Object> tempMap =  this.getMapFromIterable((Iterable<Object>)item, key);
+                Map<String, Object> tempMap =  this.getMapFromIterable(key, (Iterable<?>)  item);
                 this.appendObjectToMap(resultMap, "", tempMap);
             } else {
                 // default to simple object
