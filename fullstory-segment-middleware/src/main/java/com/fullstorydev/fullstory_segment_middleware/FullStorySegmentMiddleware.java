@@ -117,7 +117,6 @@ public class FullStorySegmentMiddleware implements Middleware {
             case track:
                 TrackPayload trackPayload = (TrackPayload) payload;
                 Map<String, ?> props = getSuffixedProps(trackPayload.properties());
-                Log.d("final", " props: "+props);
                 if (this.allowlistAllTrackEvents || this.allowlistedEvents.indexOf(trackPayload.event()) != -1) {
                     FS.event(trackPayload.event(), props);
                 }
@@ -149,7 +148,7 @@ public class FullStorySegmentMiddleware implements Middleware {
 
         fullStoryProperties.put("fullstoryUrl", FS.getCurrentSessionURL());
         // now URL API available post FullStory plugin v1.3.0
-//        fullStoryProperties.put("fullstoryNowUrl", FS.getCurrentSessionURL(true));
+        // fullStoryProperties.put("fullstoryNowUrl", FS.getCurrentSessionURL(true));
         context.put("fullstoryUrl", FS.getCurrentSessionURL());
 
         if (payload.type() == BasePayload.Type.screen) {
@@ -169,7 +168,7 @@ public class FullStorySegmentMiddleware implements Middleware {
         return null;
     }
 
-    private Map<String, Object> getSuffixedProps (Map<?, ?> props){
+    private Map<String, Object> getSuffixedProps (Map<?, ?> props) {
         // transform props to comply with FS custom events requirement
         // TODO: Segment should fail with circular dependency, but we should check anyway
         Map<String, Object> mutableProps = new HashMap<>();
@@ -187,7 +186,7 @@ public class FullStorySegmentMiddleware implements Middleware {
                 if (item instanceof Map) {
                     // nested maps, concatenate keys and push back to stack
                     Map<?,?> itemMap = (Map<?,?>) item;
-                    for (Map.Entry<?, ?> e : itemMap.entrySet()){
+                    for (Map.Entry<?, ?> e : itemMap.entrySet()) {
                         String concatenatedKey =  key + '.' + e.getKey();
                         Map<String,Object> m = new HashMap<>();
                         m.put(concatenatedKey, e.getValue());
@@ -205,8 +204,8 @@ public class FullStorySegmentMiddleware implements Middleware {
                         m.put(key, obj);
                         stack.push(m);
                     }
-                } else if (item instanceof Iterable){
-                    for(Object obj: (Iterable<?>) item){
+                } else if (item instanceof Iterable) {
+                    for (Object obj: (Iterable<?>) item) {
                         Map<String,Object> m = new HashMap<>();
                         m.put(key, obj);
                         stack.push(m);
@@ -218,7 +217,6 @@ public class FullStorySegmentMiddleware implements Middleware {
                 }
             }
         }
-
         pluralizeAllArrayKeysInMap(mutableProps);
         return mutableProps;
     }
@@ -268,7 +266,7 @@ public class FullStorySegmentMiddleware implements Middleware {
 
         int len = Array.getLength(arr);
         Object[] resultArr = new Object[len];
-        for(int i = 0; i < len; ++i){
+        for (int i = 0; i < len; ++i) {
             resultArr[i] = Array.get(arr, i);
         }
         return resultArr;
@@ -277,7 +275,7 @@ public class FullStorySegmentMiddleware implements Middleware {
     private void pluralizeAllArrayKeysInMap(Map<String,Object> map) {
         Set<String> keySet = new HashSet<>(map.keySet());
         for (String key :keySet) {
-            if (map.get(key) instanceof Collection){
+            if (map.get(key) instanceof Collection) {
                 map.put(key + 's', map.get(key));
                 map.remove(key);
             }
