@@ -2,10 +2,7 @@ package com.fullstorydev.fullstory_segment_middleware;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 
 import com.fullstory.FS;
 import com.segment.analytics.Middleware;
@@ -22,12 +19,14 @@ import static com.segment.analytics.internal.Utils.isNullOrEmpty;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 public class FullStorySegmentMiddleware implements Middleware {
 
@@ -172,101 +171,73 @@ public class FullStorySegmentMiddleware implements Middleware {
 
     private Map<String, Object> getSuffixedProps (Map<?, ?> props){
         // transform props to comply with FS custom events requirement
-
+        // TODO: Segment should fail with circular dependency, but we should check anyway
         Map<String, Object> mutableProps = new HashMap<>();
-        for (Map.Entry<?, ?> entry : props.entrySet()) {
-            // We should only be getting String type keys, but parse the map to make sure the keys are all String
-            String key =  String.valueOf(entry.getKey());
-            Object item =  entry.getValue();
+        Stack<Map<?,?>> stack = new Stack<>();
 
-            // Segment will fail too with circular dependency, but check anyway so we do not fail
-            if(item.equals(props)) continue;
+        stack.push(props);
 
-            if (item instanceof Map) {
-                // recursively calling getSuffixedProps to parse nested maps
-                mutableProps.put(key.replaceAll("_",""), this.getSuffixedProps((Map<?,?>) item));
-            } else if (item.getClass().isArray()) {
-                // if it's of array type (but not iterable)
-                ArrayList<Object> list = new ArrayList<>(Arrays.asList(this.getArrayObjectFromArray(item)));
-                Map<String, Object> tempMap = this.getMapFromIterable(key, list);
-                this.appendObjectToMap(mutableProps, "", tempMap);
-            } else if (item instanceof Iterable) {
-                Map<String, Object> tempMap = this.getMapFromIterable(key, (Iterable<?>) item);
-                this.appendObjectToMap(mutableProps, "", tempMap);
-            } else {
-                // if this is not a dictionary or array, then treat it like simple values, if data falls outside of these, we don't try to infer anything and just send as is to the server
-                String suffix = this.getSuffixStringFromSimpleObject(item);
-                this.appendObjectToMap(mutableProps, key + suffix, item);
+        while (!stack.empty()) {
+            Map<?,?> map = stack.pop();
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                // We should only be getting String type keys, but parse the map to make sure the keys we use are all String
+                String key = String.valueOf(entry.getKey());
+                Object item = entry.getValue();
+
+                if (item instanceof Map) {
+                    // nested maps, concatenate keys and push back to stack
+                    Map<?,?> itemMap = (Map<?,?>) item;
+                    for (Map.Entry<?, ?> e : itemMap.entrySet()){
+                        String concatenatedKey =  key + '.' + e.getKey();
+                        Map<String,Object> m = new HashMap<>();
+                        m.put(concatenatedKey, e.getValue());
+                        stack.push(m);
+                    }
+                } else if (item != null && item.getClass().isArray()) {
+                    // if it's of array type (but not iterable)
+                    // To comply with FS requirements, flatten the array of objects into a map:
+                    // each item in array becomes a map, with key, and item
+                    // enable search value the array in FS (i.e. searching for one product when array of products are sent)
+                    // then push each item with the same key back to stack
+                    Object[] objs = this.getArrayObjectFromArray(item);
+                    for (Object obj: objs) {
+                        Map<String,Object> m = new HashMap<>();
+                        m.put(key, obj);
+                        stack.push(m);
+                    }
+                } else if (item instanceof Iterable){
+                    for(Object obj: (Iterable<?>) item){
+                        Map<String,Object> m = new HashMap<>();
+                        m.put(key, obj);
+                        stack.push(m);
+                    }
+                } else {
+                    // if this is not a map or array, simply treat as a "primitive" value and send them as-is
+                    String suffix = this.getSuffixStringFromSimpleObject(item);
+                    this.appendSimpleObjectToMap(mutableProps, key + suffix, item);
+                }
             }
-
         }
 
+        pluralizeAllArrayKeysInMap(mutableProps);
         return mutableProps;
     }
 
-    private void appendObjectToMap (Map<String, Object> map, String key, Object obj){
-        // umbrella function to handle 3 possible object input, if not a dict or array then we will treat the object as "simple" and try to parse suffix, if failed then keep them as-is
-        if(obj == null) return;
-        if (obj.getClass().isArray()) {
-            ArrayList<Object> list = new ArrayList<>(Arrays.asList(this.getArrayObjectFromArray(obj)));
-            this.appendIterableObjectToMap(map, key, list);
-        } else if (obj instanceof Iterable){
-            this.appendIterableObjectToMap(map, key, (Iterable<?>) obj);
-        } else if (obj instanceof Map) {
-            this.appendMapObjectToMap(map, key, (Map<?,?>) obj);
-        } else {
-            this.appendSimpleObjectToMap(map, key, obj);
-        }
-    }
-
-    private void appendIterableObjectToMap(Map<String, Object> map, String key, Iterable<?> arr) {
-        for(Object obj: arr)
-            this.appendObjectToMap(map, key, obj);
-    }
-
-    private void appendMapObjectToMap(Map<String, Object> map, String key, Map<?,?> map2){
-        // when adding a parsed dict into the result dict, enumerate and add each object
-        for (Object k: map2.keySet()) {
-            String nestedKey = "";
-            if (key.length() > 0) {
-                nestedKey = key + "." + k;
-            } else {
-                nestedKey = String.valueOf(k);
-            }
-            this.appendObjectToMap(map, nestedKey, map2.get(k));
-        }
-    }
-
     private void appendSimpleObjectToMap (Map<String, Object> map, String key, Object obj) {
-        // obj is simple, add it into the result dict, check if the key with suffix already exsist, if so then we need to append to the result arrays insead of replacing the object.
-        // this creates a mutable array each time an object is added, maybe we should consider making arrays mutable in the dict
-        // key is already suffixed, we just need to check if it ends with 's' to know if it's plural
-        boolean isPlural = key.endsWith("s");
-        String pluralKey = key + "s";
+        // add one obj into the result map, check if the key with suffix already exists, if so append to the result arrays.
+        // key is already suffixed, and always in singular form
         Object item = map.get(key);
-        Object items = map.get(pluralKey);
-        // if there is already a key in singular or plural form in the dict, remove exsisting key and concatnating all values and add a new plural key (flatten the arrays)
-        if (isPlural) {
-            String singularKey = key.substring(0, key.length() - 1);
-            ArrayList<Object> arr =  new ArrayList<>();
-            // alwasy use ArrayList when pushing to map
-            if(item instanceof ArrayList){
+        if (item != null) {
+            // if the same key already exist, check if plural key is already in the map
+            // concatenate array and replace
+            ArrayList<Object> arr = new ArrayList<>();
+            arr.add(obj);
+            if (item instanceof Collection) {
                 arr.addAll((Collection<?>) item);
+            } else {
+                arr.add(item);
             }
-            if (map.containsKey(singularKey)){
-                arr.add(map.get(singularKey));
-            }
-            arr.add(obj);
-            map.remove(singularKey);
             map.put(key, arr);
-        } else if(item != null || items != null){
-            // if key exist but not plural
-            ArrayList<Object> arr =  new ArrayList<>();
-            arr.add(obj);
-            arr.add(item);
-            if(items != null) arr.add(items);
-            map.remove(key);
-            map.put(pluralKey, arr);
         } else {
             map.put(key, obj);
         }
@@ -303,37 +274,13 @@ public class FullStorySegmentMiddleware implements Middleware {
         return resultArr;
     }
 
-    private Map<String, Object> getMapFromIterable(String key, Iterable<?> arr) {
-        Map<String, Object> resultMap = new HashMap<>();
-        for (Object item : arr) {
-            // some Iterables return itself in forEach, prevent circular dependency or infinite loop
-            if(item.equals(arr)) continue;
-
-            if (item instanceof Map) {
-                // if array of maps, we then loop through all maps, flatten out each key/val into arrays, we will loose the object association but it allows user to search for each key/val in the array in FS (i.e. searching for one product when array of products are sent)
-                Map<String, Object> tempMap = this.getSuffixedProps((Map<?, ?>) item);
-                this.appendObjectToMap(resultMap, key, tempMap);
-            } else if (item.getClass().isArray()) {
-                // TODO: Segment spec should not allow nested array properties, ignore for now, but we should handle it eventually
-                ArrayList<Object> list = new ArrayList<>(Arrays.asList(this.getArrayObjectFromArray(item)));
-                Map<String, Object> tempMap = this.getMapFromIterable(key, list);
-                this.appendObjectToMap(resultMap, "", tempMap);
-            } else if(item instanceof Iterable){
-                Map<String, Object> tempMap =  this.getMapFromIterable(key, (Iterable<?>)  item);
-                this.appendObjectToMap(resultMap, "", tempMap);
-            } else {
-                // default to simple object
-                // if there are arrays of mixed type, then in the final props we will add approporate values to the same, key but with each type suffix
-                String suffix = this.getSuffixStringFromSimpleObject(item) + "s";
-                // get the current array form this specified suffix, if any, then append current item
-                ArrayList<Object> list = new ArrayList<>();
-                if(resultMap.get(key) != null) list.add(resultMap.get(key));
-                list.add(item);
-                this.appendObjectToMap(resultMap,key + suffix,list);
-
+    private void pluralizeAllArrayKeysInMap(Map<String,Object> map) {
+        Set<String> keySet = new HashSet<>(map.keySet());
+        for (String key :keySet) {
+            if (map.get(key) instanceof Collection){
+                map.put(key + 's', map.get(key));
+                map.remove(key);
             }
-
         }
-        return resultMap;
     }
 }
