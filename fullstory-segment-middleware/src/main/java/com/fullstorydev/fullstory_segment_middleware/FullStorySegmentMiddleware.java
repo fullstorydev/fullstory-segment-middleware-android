@@ -116,8 +116,8 @@ public class FullStorySegmentMiddleware implements Middleware {
 
             case track:
                 TrackPayload trackPayload = (TrackPayload) payload;
-                Map<String, ?> props = getSuffixedProps(trackPayload.properties());
                 if (this.allowlistAllTrackEvents || this.allowlistedEvents.indexOf(trackPayload.event()) != -1) {
+                    Map<String, Object> props = getSuffixedProps(trackPayload.properties());
                     FS.event(trackPayload.event(), props);
                 }
                 break;
@@ -168,28 +168,36 @@ public class FullStorySegmentMiddleware implements Middleware {
         return null;
     }
 
-    private Map<String, Object> getSuffixedProps (Map<?, ?> props) {
+    private Map<String, Object> getSuffixedProps (Map<String, Object> props) {
         // transform props to comply with FS custom events requirement
-        // TODO: Segment should fail with circular dependency, but we should check anyway
+        // TODO: Segment should not allow with circular dependency, but we should check anyway
         Map<String, Object> mutableProps = new HashMap<>();
-        Stack<Map<?,?>> stack = new Stack<>();
+        Stack<Map<String,Object>> stack = new Stack<>();
 
         stack.push(props);
 
         while (!stack.empty()) {
-            Map<?,?> map = stack.pop();
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
+            Map<String,Object> map = stack.pop();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
                 // We should only be getting String type keys, but parse the map to make sure the keys we use are all String
-                String key = String.valueOf(entry.getKey());
+                String key = entry.getKey();
                 Object item = entry.getValue();
 
+                // if item is a nested map, concatenate keys and push back to stack
+                // Example - input: {root: {key: val}}, output: {root.key: val}
                 if (item instanceof Map) {
-                    // nested maps, concatenate keys and push back to stack
+                    // we are unsure of the child map's type, cast to wildcard and then parse
                     Map<?,?> itemMap = (Map<?,?>) item;
                     for (Map.Entry<?, ?> e : itemMap.entrySet()) {
                         String concatenatedKey =  key + '.' + e.getKey();
                         Map<String,Object> m = new HashMap<>();
                         m.put(concatenatedKey, e.getValue());
+                        stack.push(m);
+                    }
+                } else if (item instanceof Iterable) {
+                    for (Object obj: (Iterable<?>) item) {
+                        Map<String,Object> m = new HashMap<>();
+                        m.put(key, obj);
                         stack.push(m);
                     }
                 } else if (item != null && item.getClass().isArray()) {
@@ -204,16 +212,10 @@ public class FullStorySegmentMiddleware implements Middleware {
                         m.put(key, obj);
                         stack.push(m);
                     }
-                } else if (item instanceof Iterable) {
-                    for (Object obj: (Iterable<?>) item) {
-                        Map<String,Object> m = new HashMap<>();
-                        m.put(key, obj);
-                        stack.push(m);
-                    }
                 } else {
                     // if this is not a map or array, simply treat as a "primitive" value and send them as-is
                     String suffix = this.getSuffixStringFromSimpleObject(item);
-                    this.appendSimpleObjectToMap(mutableProps, key + suffix, item);
+                    this.addSimpleObjectToMap(mutableProps, key + suffix, item);
                 }
             }
         }
@@ -221,13 +223,13 @@ public class FullStorySegmentMiddleware implements Middleware {
         return mutableProps;
     }
 
-    private void appendSimpleObjectToMap (Map<String, Object> map, String key, Object obj) {
-        // add one obj into the result map, check if the key with suffix already exists, if so append to the result arrays.
+    private void addSimpleObjectToMap (Map<String, Object> map, String key, Object obj) {
+        // add one obj into the result map, check if the key with suffix already exists, if so add to the result arrays.
         // key is already suffixed, and always in singular form
         Object item = map.get(key);
+        // if the same key already exist, check if plural key is already in the map
         if (item != null) {
-            // if the same key already exist, check if plural key is already in the map
-            // concatenate array and replace
+            // concatenate array and replace item with new ArrayList
             ArrayList<Object> arr = new ArrayList<>();
             arr.add(obj);
             if (item instanceof Collection) {
@@ -247,7 +249,7 @@ public class FullStorySegmentMiddleware implements Middleware {
         if ( item instanceof String ) {
             suffix = "_str";
         } else if ( item instanceof Number ) {
-            // defaut to real
+            // default to real
             suffix = "_real";
             if ( item instanceof Integer || item instanceof BigInteger) {
                 suffix = "_int";
