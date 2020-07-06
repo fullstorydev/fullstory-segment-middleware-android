@@ -141,6 +141,34 @@ public class FullStorySegmentMiddleware implements Middleware {
         if (newPayload == null) newPayload = payload.toBuilder().context(context).build();
         chain.proceed(newPayload);
     }
+    
+    private BasePayload getNewPayloadWithFSURL(BasePayload payload, Map<String, Object> context) {
+        // properties obj is immutable so we need to create a new one
+        ValueMap properties = payload.getValueMap("properties");
+        Map<String, Object> fullStoryProperties = new HashMap<>();
+        if (!isNullOrEmpty(properties)) fullStoryProperties.putAll(properties);
+
+        fullStoryProperties.put("fullstoryUrl", FS.getCurrentSessionURL());
+        // now URL API available post FullStory plugin v1.3.0
+        // fullStoryProperties.put("fullstoryNowUrl", FS.getCurrentSessionURL(true));
+        context.put("fullstoryUrl", FS.getCurrentSessionURL());
+
+        if (payload.type() == BasePayload.Type.screen) {
+            ScreenPayload screenPayload = (ScreenPayload) payload;
+            ScreenPayload.Builder screenPayloadBuilder = screenPayload.toBuilder()
+                    .context(context)
+                    .properties(fullStoryProperties);
+            return screenPayloadBuilder.build();
+
+        } else if (payload.type() == BasePayload.Type.track) {
+            TrackPayload trackPayload = (TrackPayload) payload;
+            TrackPayload.Builder trackPayloadBuilder = trackPayload.toBuilder()
+                    .context(context)
+                    .properties(fullStoryProperties);
+            return trackPayloadBuilder.build();
+        }
+        return null;
+    }
 
     private Map<String, Object> getSuffixedProps (Map<String, Object> props) {
         // transform props to comply with FS custom events requirement
@@ -194,34 +222,6 @@ public class FullStorySegmentMiddleware implements Middleware {
         }
         pluralizeAllArrayKeysInMap(mutableProps);
         return mutableProps;
-    }
-
-    private BasePayload getNewPayloadWithFSURL(BasePayload payload, Map<String, Object> context) {
-        // properties obj is immutable so we need to create a new one
-        ValueMap properties = payload.getValueMap("properties");
-        Map<String, Object> fullStoryProperties = new HashMap<>();
-        if (!isNullOrEmpty(properties)) fullStoryProperties.putAll(properties);
-
-        fullStoryProperties.put("fullstoryUrl", FS.getCurrentSessionURL());
-        // now URL API available post FullStory plugin v1.3.0
-        // fullStoryProperties.put("fullstoryNowUrl", FS.getCurrentSessionURL(true));
-        context.put("fullstoryUrl", FS.getCurrentSessionURL());
-
-        if (payload.type() == BasePayload.Type.screen) {
-            ScreenPayload screenPayload = (ScreenPayload) payload;
-            ScreenPayload.Builder screenPayloadBuilder = screenPayload.toBuilder()
-                    .context(context)
-                    .properties(fullStoryProperties);
-            return screenPayloadBuilder.build();
-
-        } else if (payload.type() == BasePayload.Type.track) {
-            TrackPayload trackPayload = (TrackPayload) payload;
-            TrackPayload.Builder trackPayloadBuilder = trackPayload.toBuilder()
-                    .context(context)
-                    .properties(fullStoryProperties);
-            return trackPayloadBuilder.build();
-        }
-        return null;
     }
 
     private void addSimpleObjectToMap (Map<String, Object> map, String key, Object obj) {
