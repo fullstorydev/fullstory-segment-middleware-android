@@ -179,7 +179,6 @@ public class FullStorySegmentMiddleware implements Middleware {
         while (!stack.empty()) {
             Map<String,Object> map = stack.pop();
             for (Map.Entry<String, Object> entry : map.entrySet()) {
-                // We should only be getting String type keys, but parse the map to make sure the keys we use are all String
                 String key = entry.getKey();
                 Object item = entry.getValue();
 
