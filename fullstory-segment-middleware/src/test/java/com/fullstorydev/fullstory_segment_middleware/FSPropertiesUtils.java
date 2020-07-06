@@ -309,7 +309,7 @@ public class FSPropertiesUtils {
         Map<String, Object> map = new HashMap<>();
         map.put("wishlist_id_str", "skdjsidjsdkdj29j");
         map.put("wishlist_name_str", "Loved Games");
-        map.put("cart_id_str", "'99j2d92j9dj29dj29d2d'");
+        map.put("cart_id_str", "99j2d92j9dj29dj29d2d");
         map.putAll(getMonopolyProduct());
         return map;
     }
