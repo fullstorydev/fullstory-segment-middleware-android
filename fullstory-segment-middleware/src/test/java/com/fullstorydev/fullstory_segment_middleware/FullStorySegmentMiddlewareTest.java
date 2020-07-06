@@ -13,11 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Date;
-<<<<<<< HEAD
 import java.util.Map;
-=======
->>>>>>> dcc8dc5... unit test setup
-
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
