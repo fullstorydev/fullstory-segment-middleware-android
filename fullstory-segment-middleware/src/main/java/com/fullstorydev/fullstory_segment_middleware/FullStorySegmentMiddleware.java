@@ -16,10 +16,17 @@ import com.segment.analytics.integrations.TrackPayload;
 import static com.segment.analytics.internal.Utils.getSegmentSharedPreferences;
 import static com.segment.analytics.internal.Utils.isNullOrEmpty;
 
+import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 public class FullStorySegmentMiddleware implements Middleware {
 
@@ -110,7 +117,8 @@ public class FullStorySegmentMiddleware implements Middleware {
             case track:
                 TrackPayload trackPayload = (TrackPayload) payload;
                 if (this.allowlistAllTrackEvents || this.allowlistedEvents.indexOf(trackPayload.event()) != -1) {
-                    FS.event(trackPayload.event(), trackPayload.properties());
+                    Map<String, Object> props = getSuffixedProps(trackPayload.properties());
+                    FS.event(trackPayload.event(), props);
                 }
                 break;
 
@@ -140,7 +148,7 @@ public class FullStorySegmentMiddleware implements Middleware {
 
         fullStoryProperties.put("fullstoryUrl", FS.getCurrentSessionURL());
         // now URL API available post FullStory plugin v1.3.0
-//        fullStoryProperties.put("fullstoryNowUrl", FS.getCurrentSessionURL(true));
+        // fullStoryProperties.put("fullstoryNowUrl", FS.getCurrentSessionURL(true));
         context.put("fullstoryUrl", FS.getCurrentSessionURL());
 
         if (payload.type() == BasePayload.Type.screen) {
@@ -158,5 +166,120 @@ public class FullStorySegmentMiddleware implements Middleware {
             return trackPayloadBuilder.build();
         }
         return null;
+    }
+
+    private Map<String, Object> getSuffixedProps (Map<String, Object> props) {
+        // transform props to comply with FS custom events requirement
+        // TODO: Segment should not allow with circular dependency, but we should check anyway
+        Map<String, Object> mutableProps = new HashMap<>();
+        Stack<Map<String,Object>> stack = new Stack<>();
+
+        stack.push(props);
+
+        while (!stack.empty()) {
+            Map<String,Object> map = stack.pop();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+                Object item = entry.getValue();
+
+                // if item is a nested map, concatenate keys and push back to stack
+                // Example - input: {root: {key: val}}, output: {root.key: val}
+                if (item instanceof Map) {
+                    // we are unsure of the child map's type, cast to wildcard and then parse
+                    Map<?,?> itemMap = (Map<?,?>) item;
+                    for (Map.Entry<?, ?> e : itemMap.entrySet()) {
+                        String concatenatedKey =  key + '.' + e.getKey();
+                        Map<String,Object> m = new HashMap<>();
+                        m.put(concatenatedKey, e.getValue());
+                        stack.push(m);
+                    }
+                } else if (item instanceof Iterable) {
+                    for (Object obj: (Iterable<?>) item) {
+                        Map<String,Object> m = new HashMap<>();
+                        m.put(key, obj);
+                        stack.push(m);
+                    }
+                } else if (item != null && item.getClass().isArray()) {
+                    // if it's of array type (but not iterable)
+                    // To comply with FS requirements, flatten the array of objects into a map:
+                    // each item in array becomes a map, with key, and item
+                    // enable search value the array in FS (i.e. searching for one product when array of products are sent)
+                    // then push each item with the same key back to stack
+                    Object[] objs = this.getArrayObjectFromArray(item);
+                    for (Object obj: objs) {
+                        Map<String,Object> m = new HashMap<>();
+                        m.put(key, obj);
+                        stack.push(m);
+                    }
+                } else {
+                    // if this is not a map or array, simply treat as a "primitive" value and send them as-is
+                    String suffix = this.getSuffixStringFromSimpleObject(item);
+                    this.addSimpleObjectToMap(mutableProps, key + suffix, item);
+                }
+            }
+        }
+        pluralizeAllArrayKeysInMap(mutableProps);
+        return mutableProps;
+    }
+
+    private void addSimpleObjectToMap (Map<String, Object> map, String key, Object obj) {
+        // add one obj into the result map, check if the key with suffix already exists, if so add to the result arrays.
+        // key is already suffixed, and always in singular form
+        Object item = map.get(key);
+        // if the same key already exist, check if plural key is already in the map
+        if (item != null) {
+            // concatenate array and replace item with new ArrayList
+            ArrayList<Object> arr = new ArrayList<>();
+            arr.add(obj);
+            if (item instanceof Collection) {
+                arr.addAll((Collection<?>) item);
+            } else {
+                arr.add(item);
+            }
+            map.put(key, arr);
+        } else {
+            map.put(key, obj);
+        }
+    }
+
+    private String getSuffixStringFromSimpleObject(Object item) {
+        // default to no suffix;
+        String suffix = "";
+        if ( item instanceof String ) {
+            suffix = "_str";
+        } else if ( item instanceof Number ) {
+            // default to real
+            suffix = "_real";
+            if ( item instanceof Integer || item instanceof BigInteger) {
+                suffix = "_int";
+            }
+        } else if (item instanceof Boolean) {
+            suffix = "_bool";
+        } else if (item instanceof Date) {
+            suffix = "_date";
+        }
+
+        return suffix;
+    }
+
+    private Object[] getArrayObjectFromArray(Object arr) {
+        if (arr instanceof Object[]) return (Object[]) arr;
+
+        int len = Array.getLength(arr);
+        Object[] resultArr = new Object[len];
+        for (int i = 0; i < len; ++i) {
+            resultArr[i] = Array.get(arr, i);
+        }
+        return resultArr;
+    }
+
+    private void pluralizeAllArrayKeysInMap(Map<String,Object> map) {
+        Set<String> keySet = new HashSet<>(map.keySet());
+        for (String key :keySet) {
+            if (map.get(key) instanceof Collection) {
+                map.put(key + 's', map.get(key));
+                map.remove(key);
+            }
+        }
     }
 }
