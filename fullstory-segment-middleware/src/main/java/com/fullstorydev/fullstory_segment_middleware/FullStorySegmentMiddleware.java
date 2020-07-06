@@ -141,7 +141,7 @@ public class FullStorySegmentMiddleware implements Middleware {
         if (newPayload == null) newPayload = payload.toBuilder().context(context).build();
         chain.proceed(newPayload);
     }
-    
+
     private BasePayload getNewPayloadWithFSURL(BasePayload payload, Map<String, Object> context) {
         // properties obj is immutable so we need to create a new one
         ValueMap properties = payload.getValueMap("properties");
