@@ -17,41 +17,7 @@ public class FSPropertiesUtils {
         map.put("list_id_str","hot_deals_1");
         map.put("category_str","Deals");
 
-        ArrayList<Object> arr = new ArrayList<>();
-
-        arr.add("507f1f77bcf86cd799439011");
-        arr.add("505bd76785ebb509fc183733");
-        map.put("products.product_id_strs", arr.clone());
-
-        arr.clear();
-        arr.add("45790-32");
-        arr.add("46493-32");
-        map.put("products.sku_strs", arr.clone());
-
-        arr.clear();
-        arr.add("Monopoly: 3rd Edition");
-        arr.add("Uno Card Game");
-        map.put("products.name_strs", arr.clone());
-
-        arr.clear();
-        arr.add(19.0);
-        arr.add(3.0);
-        map.put("products.price_reals", arr.clone());
-
-        arr.clear();
-        arr.add(1);
-        arr.add(2);
-        map.put("products.position_ints", arr.clone());
-
-        arr.clear();
-        arr.add("Games");
-        arr.add("Games");
-        map.put("products.category_strs", arr.clone());
-
-        arr.clear();
-        arr.add("");
-        map.put("products.url_str", "https://www.example.com/product/path-32");
-        map.put("products.image_url_str", "https://www.example.com/product/path.jpg-32");
+        map.putAll(getGameProducts());
 
         return map;
     }
@@ -123,74 +89,28 @@ public class FSPropertiesUtils {
     }
 
     static Map<String, Object> ECommerceEventsProductClicked() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("product_id_str","507f1f77bcf86cd799439011");
-        map.put("sku_str","G-32");
-        map.put("category_str","Games");
-        map.put("name_str","Monopoly: 3rd Edition");
-        map.put("brand_str","Hasbro");
-        map.put("variant_str","200 pieces");
-        map.put("price_real",18.99);
-        map.put("quantity_int",1);
-        map.put("coupon_str","MAYDEALS");
-        map.put("position_int",3);
-        map.put("url_str","https://www.example.com/product/path");
-        map.put("image_url_str","https://www.example.com/product/path.jpg");
-        return map;
+        return getMonopolyProduct();
     }
 
     static Map<String, Object> ECommerceEventsProductViewed() {
         Map<String, Object> map = new HashMap<>();
-        map.put("product_id_str","507f1f77bcf86cd799439011");
-        map.put("sku_str","G-32");
-        map.put("category_str","Games");
-        map.put("name_str","Monopoly: 3rd Edition");
-        map.put("brand_str","Hasbro");
-        map.put("variant_str","200 pieces");
-        map.put("price_real",18.99);
-        map.put("quantity_int",1);
-        map.put("coupon_str","MAYDEALS");
         map.put("currency_str","usd");
-        map.put("position_int",3);
         map.put("value_real",18.99);
-        map.put("url_str","https://www.example.com/product/path");
-        map.put("image_url_str","https://www.example.com/product/path.jpg");
+        map.putAll(getMonopolyProduct());
         return map;
     }
 
     static Map<String, Object> ECommerceEventsProductAdded() {
         Map<String, Object> map = new HashMap<>();
         map.put("cart_id_str","skdjsidjsdkdj29j");
-        map.put("product_id_str","507f1f77bcf86cd799439011");
-        map.put("sku_str","G-32");
-        map.put("category_str","Games");
-        map.put("name_str","Monopoly: 3rd Edition");
-        map.put("brand_str","Hasbro");
-        map.put("variant_str","200 pieces");
-        map.put("price_real",18.99);
-        map.put("quantity_int",1);
-        map.put("coupon_str","MAYDEALS");
-        map.put("position_int",3);
-        map.put("url_str","https://www.example.com/product/path");
-        map.put("image_url_str","https://www.example.com/product/path.jpg");
+        map.putAll(getMonopolyProduct());
         return map;
     }
 
     static Map<String, Object> ECommerceEventsProductRemoved() {
         Map<String, Object> map = new HashMap<>();
         map.put("cart_id_str","skdjsidjsdkdj29j");
-        map.put("product_id_str","507f1f77bcf86cd799439011");
-        map.put("sku_str","G-32");
-        map.put("category_str","Games");
-        map.put("name_str","Monopoly: 3rd Edition");
-        map.put("brand_str","Hasbro");
-        map.put("variant_str","200 pieces");
-        map.put("price_real",18.99);
-        map.put("quantity_int",1);
-        map.put("coupon_str","MAYDEALS");
-        map.put("position_int",3);
-        map.put("url_str","https://www.example.com/product/path");
-        map.put("image_url_str","https://www.example.com/product/path.jpg");
+        map.putAll(getMonopolyProduct());
         return map;
     }
 
@@ -198,41 +118,7 @@ public class FSPropertiesUtils {
         Map<String, Object> map = new HashMap<>();
         map.put("cart_id_str","skdjsidjsdkdj29j");
 
-        ArrayList<Object> arr = new ArrayList<>();
-
-        arr.add("507f1f77bcf86cd799439011");
-        arr.add("505bd76785ebb509fc183733");
-        map.put("products.product_id_strs", arr.clone());
-
-        arr.clear();
-        arr.add("45790-32");
-        arr.add("46493-32");
-        map.put("products.sku_strs", arr.clone());
-
-        arr.clear();
-        arr.add("Monopoly: 3rd Edition");
-        arr.add("Uno Card Game");
-        map.put("products.name_strs", arr.clone());
-
-        arr.clear();
-        arr.add(19.0);
-        arr.add(3.0);
-        map.put("products.price_reals", arr.clone());
-
-        arr.clear();
-        arr.add(1);
-        arr.add(2);
-        map.put("products.position_ints", arr.clone());
-
-        arr.clear();
-        arr.add("Games");
-        arr.add("Games");
-        map.put("products.category_strs", arr.clone());
-
-        arr.clear();
-        arr.add("");
-        map.put("products.url_str", "https://www.example.com/product/path-32");
-        map.put("products.image_url_str", "https://www.example.com/product/path.jpg-32");
+        map.putAll(getGameProducts());
 
         return map;
     }
@@ -249,41 +135,7 @@ public class FSPropertiesUtils {
         map.put("coupon_str","hasbros");
         map.put("currency_str","USD");
 
-        ArrayList<Object> arr = new ArrayList<>();
-
-        arr.add("507f1f77bcf86cd799439011");
-        arr.add("505bd76785ebb509fc183733");
-        map.put("products.product_id_strs", arr.clone());
-
-        arr.clear();
-        arr.add("45790-32");
-        arr.add("46493-32");
-        map.put("products.sku_strs", arr.clone());
-
-        arr.clear();
-        arr.add("Monopoly: 3rd Edition");
-        arr.add("Uno Card Game");
-        map.put("products.name_strs", arr.clone());
-
-        arr.clear();
-        arr.add(19.0);
-        arr.add(3.0);
-        map.put("products.price_reals", arr.clone());
-
-        arr.clear();
-        arr.add(1);
-        arr.add(2);
-        map.put("products.position_ints", arr.clone());
-
-        arr.clear();
-        arr.add("Games");
-        arr.add("Games");
-        map.put("products.category_strs", arr.clone());
-
-        arr.clear();
-        arr.add("");
-        map.put("products.url_str", "https://www.example.com/product/path-32");
-        map.put("products.image_url_str", "https://www.example.com/product/path.jpg-32");
+        map.putAll(getGameProducts());
 
         return map;
     }
@@ -325,41 +177,7 @@ public class FSPropertiesUtils {
         map.put("coupon_str","hasbros");
         map.put("currency_str","USD");
 
-        ArrayList<Object> arr = new ArrayList<>();
-
-        arr.add("507f1f77bcf86cd799439011");
-        arr.add("505bd76785ebb509fc183733");
-        map.put("products.product_id_strs", arr.clone());
-
-        arr.clear();
-        arr.add("45790-32");
-        arr.add("46493-32");
-        map.put("products.sku_strs", arr.clone());
-
-        arr.clear();
-        arr.add("Monopoly: 3rd Edition");
-        arr.add("Uno Card Game");
-        map.put("products.name_strs", arr.clone());
-
-        arr.clear();
-        arr.add(19.0);
-        arr.add(3.0);
-        map.put("products.price_reals", arr.clone());
-
-        arr.clear();
-        arr.add(1);
-        arr.add(2);
-        map.put("products.position_ints", arr.clone());
-
-        arr.clear();
-        arr.add("Games");
-        arr.add("Games");
-        map.put("products.category_strs", arr.clone());
-
-        arr.clear();
-        arr.add("");
-        map.put("products.url_str", "https://www.example.com/product/path-32");
-        map.put("products.image_url_str", "https://www.example.com/product/path.jpg-32");
+        map.putAll(getGameProducts());
 
         return map;
     }
@@ -378,41 +196,7 @@ public class FSPropertiesUtils {
         map.put("coupon_str","hasbros");
         map.put("currency_str","USD");
 
-        ArrayList<Object> arr = new ArrayList<>();
-
-        arr.add("507f1f77bcf86cd799439011");
-        arr.add("505bd76785ebb509fc183733");
-        map.put("products.product_id_strs", arr.clone());
-
-        arr.clear();
-        arr.add("45790-32");
-        arr.add("46493-32");
-        map.put("products.sku_strs", arr.clone());
-
-        arr.clear();
-        arr.add("Monopoly: 3rd Edition");
-        arr.add("Uno Card Game");
-        map.put("products.name_strs", arr.clone());
-
-        arr.clear();
-        arr.add(19.0);
-        arr.add(3.0);
-        map.put("products.price_reals", arr.clone());
-
-        arr.clear();
-        arr.add(1);
-        arr.add(2);
-        map.put("products.position_ints", arr.clone());
-
-        arr.clear();
-        arr.add("Games");
-        arr.add("Games");
-        map.put("products.category_strs", arr.clone());
-
-        arr.clear();
-        arr.add("");
-        map.put("products.url_str", "https://www.example.com/product/path-32");
-        map.put("products.image_url_str", "https://www.example.com/product/path.jpg-32");
+        map.putAll(getGameProducts());
 
         return map;
     }
@@ -423,41 +207,7 @@ public class FSPropertiesUtils {
         map.put("total_int",30);
         map.put("currency_str","USD");
 
-        ArrayList<Object> arr = new ArrayList<>();
-
-        arr.add("507f1f77bcf86cd799439011");
-        arr.add("505bd76785ebb509fc183733");
-        map.put("products.product_id_strs", arr.clone());
-
-        arr.clear();
-        arr.add("45790-32");
-        arr.add("46493-32");
-        map.put("products.sku_strs", arr.clone());
-
-        arr.clear();
-        arr.add("Monopoly: 3rd Edition");
-        arr.add("Uno Card Game");
-        map.put("products.name_strs", arr.clone());
-
-        arr.clear();
-        arr.add(19.0);
-        arr.add(3.0);
-        map.put("products.price_reals", arr.clone());
-
-        arr.clear();
-        arr.add(1);
-        arr.add(2);
-        map.put("products.position_ints", arr.clone());
-
-        arr.clear();
-        arr.add("Games");
-        arr.add("Games");
-        map.put("products.category_strs", arr.clone());
-
-        arr.clear();
-        arr.add("");
-        map.put("products.url_str", "https://www.example.com/product/path-32");
-        map.put("products.image_url_str", "https://www.example.com/product/path.jpg-32");
+        map.putAll(getGameProducts());
 
         return map;
     }
@@ -475,41 +225,7 @@ public class FSPropertiesUtils {
         map.put("coupon_str","hasbros");
         map.put("currency_str","USD");
 
-        ArrayList<Object> arr = new ArrayList<>();
-
-        arr.add("507f1f77bcf86cd799439011");
-        arr.add("505bd76785ebb509fc183733");
-        map.put("products.product_id_strs", arr.clone());
-
-        arr.clear();
-        arr.add("45790-32");
-        arr.add("46493-32");
-        map.put("products.sku_strs", arr.clone());
-
-        arr.clear();
-        arr.add("Monopoly: 3rd Edition");
-        arr.add("Uno Card Game");
-        map.put("products.name_strs", arr.clone());
-
-        arr.clear();
-        arr.add(19.0);
-        arr.add(3.0);
-        map.put("products.price_reals", arr.clone());
-
-        arr.clear();
-        arr.add(1);
-        arr.add(2);
-        map.put("products.position_ints", arr.clone());
-
-        arr.clear();
-        arr.add("Games");
-        arr.add("Games");
-        map.put("products.category_strs", arr.clone());
-
-        arr.clear();
-        arr.add("");
-        map.put("products.url_str", "https://www.example.com/product/path-32");
-        map.put("products.image_url_str", "https://www.example.com/product/path.jpg-32");
+        map.putAll(getGameProducts());
 
         return map;
     }
@@ -556,18 +272,7 @@ public class FSPropertiesUtils {
         Map<String, Object> map = new HashMap<>();
         map.put("wishlist_id_str","skdjsidjsdkdj29j");
         map.put("wishlist_name_str","Loved Games");
-        map.put("product_id_str","507f1f77bcf86cd799439011");
-        map.put("sku_str","G-32");
-        map.put("category_str","Games");
-        map.put("name_str","Monopoly: 3rd Edition");
-        map.put("brand_str","Hasbro");
-        map.put("variant_str","200 pieces");
-        map.put("price_real",18.99);
-        map.put("quantity_int",1);
-        map.put("coupon_str","MAYDEALS");
-        map.put("position_int",3);
-        map.put("url_str","https://www.example.com/product/path");
-        map.put("image_url_str","https://www.example.com/product/path.jpg");
+        map.putAll(getMonopolyProduct());
         return map;
     }
 
@@ -575,18 +280,7 @@ public class FSPropertiesUtils {
         Map<String, Object> map = new HashMap<>();
         map.put("wishlist_id_str","skdjsidjsdkdj29j");
         map.put("wishlist_name_str","Loved Games");
-        map.put("product_id_str","507f1f77bcf86cd799439011");
-        map.put("sku_str","G-32");
-        map.put("category_str","Games");
-        map.put("name_str","Monopoly: 3rd Edition");
-        map.put("brand_str","Hasbro");
-        map.put("variant_str","200 pieces");
-        map.put("price_real",18.99);
-        map.put("quantity_int",1);
-        map.put("coupon_str","MAYDEALS");
-        map.put("position_int",3);
-        map.put("url_str","https://www.example.com/product/path");
-        map.put("image_url_str","https://www.example.com/product/path.jpg");
+        map.putAll(getMonopolyProduct());
         return map;
     }
 
@@ -595,18 +289,7 @@ public class FSPropertiesUtils {
         map.put("wishlist_id_str","skdjsidjsdkdj29j");
         map.put("wishlist_name_str","Loved Games");
         map.put("cart_id_str","'99j2d92j9dj29dj29d2d'");
-        map.put("product_id_str","507f1f77bcf86cd799439011");
-        map.put("sku_str","G-32");
-        map.put("category_str","Games");
-        map.put("name_str","Monopoly: 3rd Edition");
-        map.put("brand_str","Hasbro");
-        map.put("variant_str","200 pieces");
-        map.put("price_real",18.99);
-        map.put("quantity_int",1);
-        map.put("coupon_str","MAYDEALS");
-        map.put("position_int",3);
-        map.put("url_str","https://www.example.com/product/path");
-        map.put("image_url_str","https://www.example.com/product/path.jpg");
+        map.putAll(getMonopolyProduct());
         return map;
     }
     static Map<String, Object> ECommerceEventsProductShared() {
@@ -614,18 +297,7 @@ public class FSPropertiesUtils {
         map.put("share_via_str","email");
         map.put("share_message_str","Hey, check out this item");
         map.put("recipient_str","friend@example.com");
-        map.put("product_id_str","507f1f77bcf86cd799439011");
-        map.put("sku_str","G-32");
-        map.put("category_str","Games");
-        map.put("name_str","Monopoly: 3rd Edition");
-        map.put("brand_str","Hasbro");
-        map.put("variant_str","200 pieces");
-        map.put("price_real",18.99);
-        map.put("quantity_int",1);
-        map.put("coupon_str","MAYDEALS");
-        map.put("position_int",3);
-        map.put("url_str","https://www.example.com/product/path");
-        map.put("image_url_str","https://www.example.com/product/path.jpg");
+        map.putAll(getMonopolyProduct());
         return map;
     }
 
@@ -653,4 +325,64 @@ public class FSPropertiesUtils {
 
         return map;
     }
+
+    static Map<String, Object> getGameProducts(){
+        Map<String, Object> map = new HashMap<>();
+
+        ArrayList<Object> arr = new ArrayList<>();
+
+        arr.add("507f1f77bcf86cd799439011");
+        arr.add("505bd76785ebb509fc183733");
+        map.put("products.product_id_strs", arr.clone());
+
+        arr.clear();
+        arr.add("45790-32");
+        arr.add("46493-32");
+        map.put("products.sku_strs", arr.clone());
+
+        arr.clear();
+        arr.add("Monopoly: 3rd Edition");
+        arr.add("Uno Card Game");
+        map.put("products.name_strs", arr.clone());
+
+        arr.clear();
+        arr.add(19.0);
+        arr.add(3.0);
+        map.put("products.price_reals", arr.clone());
+
+        arr.clear();
+        arr.add(1);
+        arr.add(2);
+        map.put("products.position_ints", arr.clone());
+
+        arr.clear();
+        arr.add("Games");
+        arr.add("Games");
+        map.put("products.category_strs", arr.clone());
+
+        arr.clear();
+        arr.add("");
+        map.put("products.url_str", "https://www.example.com/product/path-32");
+        map.put("products.image_url_str", "https://www.example.com/product/path.jpg-32");
+
+        return map;
+    }
+
+    static Map<String, Object> getMonopolyProduct(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("product_id_str","507f1f77bcf86cd799439011");
+        map.put("sku_str","G-32");
+        map.put("category_str","Games");
+        map.put("name_str","Monopoly: 3rd Edition");
+        map.put("brand_str","Hasbro");
+        map.put("variant_str","200 pieces");
+        map.put("price_real",18.99);
+        map.put("quantity_int",1);
+        map.put("coupon_str","MAYDEALS");
+        map.put("position_int",3);
+        map.put("url_str","https://www.example.com/product/path");
+        map.put("image_url_str","https://www.example.com/product/path.jpg");
+        return map;
+    }
+
 }
