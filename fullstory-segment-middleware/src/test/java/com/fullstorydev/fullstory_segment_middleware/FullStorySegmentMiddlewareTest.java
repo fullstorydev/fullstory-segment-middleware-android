@@ -201,5 +201,108 @@ public class FullStorySegmentMiddlewareTest {
         Assert.assertEquals(FSPropertiesUtils.ECommerceEventsCheckoutStepCompleted(), output);
     }
 
+    @Test
+    public void getSuffixedProps_ECommerceEventsCheckoutPaymentInfoEntered() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsCheckoutPaymentInfoEntered();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsCheckoutPaymentInfoEntered(), output);
+    }
 
+    @Test
+    public void getSuffixedProps_ECommerceEventsOrderUpdated() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsOrderUpdated();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsOrderUpdated(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsOrderCompleted() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsOrderCompleted();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsOrderCompleted(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsOrderRefunded() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsOrderRefunded();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsOrderRefunded(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsOrderCancelled() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsOrderCancelled();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsOrderCancelled(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsCouponEntered() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsCouponEntered();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsCouponEntered(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsCouponApplied() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsCouponApplied();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsCouponApplied(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsCouponDenied() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsCouponDenied();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsCouponDenied(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsCouponRemoved() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsCouponRemoved();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsCouponRemoved(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsProductAddedToWishlist() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsProductAddedToWishlist();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsProductAddedToWishlist(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsProductRemovedFromWishlist() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsProductRemovedFromWishlist();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsProductRemovedFromWishlist(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsWishlistProductAddedToCart() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsWishlistProductAddedToCart();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsWishlistProductAddedToCart(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsProductShared() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsProductShared();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsProductShared(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsProductReviewed() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsProductReviewed();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsProductReviewed(), output);
+    }
+
+    @Test
+    public void getSuffixedProps_ECommerceEventsCartShared() {
+        Map<String,Object> input = SegmentSpecUtils.ECommerceEventsCartShared();
+        Map<String,Object> output = fullStorySegmentMiddleware.getSuffixedProps(input);
+        Assert.assertEquals(FSPropertiesUtils.ECommerceEventsCartShared(), output);
+    }
 }
