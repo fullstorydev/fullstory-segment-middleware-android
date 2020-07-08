@@ -18,6 +18,10 @@ allprojects {
         google()
         jcenter()
     }
+    allprojects {
+        group = 'org.fullstorydev'
+        version = '1.0'
+    }
 }
 
 task clean(type: Delete) {
