@@ -24,8 +24,6 @@ public class FullStorySegmentMiddlewareTest {
     Context mockContext;
     @Mock
     SharedPreferences mockPrefs;
-//    @Mock
-//    SharedPreferences.Editor mockEditor;
 
     FullStorySegmentMiddleware fullStorySegmentMiddleware;
 
@@ -33,7 +31,6 @@ public class FullStorySegmentMiddlewareTest {
     public void setUp(){
         MockitoAnnotations.initMocks(this);
         Mockito.when(mockContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mockPrefs);
-//        Mockito.when(mockPrefs.getString("SegmentWriteMockKey", null)).thenReturn("SegmentWriteMockKey");
 
         fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
     }
