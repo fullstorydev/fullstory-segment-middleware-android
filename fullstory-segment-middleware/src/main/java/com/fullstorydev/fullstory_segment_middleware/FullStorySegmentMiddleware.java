@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.fullstory.FS;
 import com.segment.analytics.Middleware;
 import com.segment.analytics.ValueMap;
@@ -242,15 +244,15 @@ public class FullStorySegmentMiddleware implements Middleware {
         }
     }
 
-    private String getSuffixStringFromSimpleObject(Object item) {
+    private String getSuffixStringFromSimpleObject(@NonNull Object item) {
         // default to no suffix;
         String suffix = "";
-        if ( item instanceof String ) {
+        if ( item instanceof String || item instanceof Character) {
             suffix = "_str";
         } else if ( item instanceof Number ) {
             // default to real
             suffix = "_real";
-            if ( item instanceof Integer || item instanceof BigInteger) {
+            if ( item instanceof Integer || item instanceof BigInteger || item instanceof Long || item instanceof Short) {
                 suffix = "_int";
             }
         } else if (item instanceof Boolean) {
