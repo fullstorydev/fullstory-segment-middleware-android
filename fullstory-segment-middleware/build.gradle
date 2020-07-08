@@ -34,16 +34,16 @@ project.afterEvaluate {
         publications {
             aar(MavenPublication) {
                 groupId = 'com.fullstorydev'
-                artifactId = 'FullstorySegmentMiddleware'
+                artifactId = 'fullstory-segment-middleware'
                 version = '1.1'
 
 //                from components.java
                 artifact bundleDebugAar
+
             }
         }
     }
 }
-
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
