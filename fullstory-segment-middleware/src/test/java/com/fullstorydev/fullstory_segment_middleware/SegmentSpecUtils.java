@@ -1,10 +1,13 @@
 package com.fullstorydev.fullstory_segment_middleware;
 
-import org.mockito.Mockito;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+/**
+    Utility class containing mock data for all events' properties, according to Segment ecommerce spec defined here:
+    https://segment.com/docs/connections/spec/ecommerce/v2/
+ **/
 
 public class SegmentSpecUtils {
     static Map<String, Object> ECommerceEventsProductsSearched() {

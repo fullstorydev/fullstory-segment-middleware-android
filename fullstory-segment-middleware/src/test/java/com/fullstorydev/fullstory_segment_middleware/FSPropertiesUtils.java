@@ -5,6 +5,27 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+    Utility class containing transformed data resulted from SegmentSpecUtils class.
+    FullStory's requirement for custom property names suffix can be found here: https://help.fullstory.com/hc/en-us/articles/360020623234-FS-Recording-Client-API-Requirements
+    Sample input in json format:
+    {
+        name: "a product",
+        quantity: 5,
+        price: 3.30,
+        type: ["string1", "string2"],
+        keysArray: [{key: "val1"}, {key: "val2"}]
+    }
+    Sample output:
+     {
+        name_str: "a product",
+        quantity_int: 5,
+        price_real: 3.30,
+        type_strs: ["string1", "string2"],
+        keysArray.key_strs: ["val1", "val2"]
+    }
+ **/
+
 public class FSPropertiesUtils {
     static Map<String, Object> ECommerceEventsProductsSearched() {
         Map<String, Object> map = new HashMap<>();
