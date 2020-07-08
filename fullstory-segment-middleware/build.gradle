@@ -28,9 +28,16 @@ android {
 }
 
 project.afterEvaluate {
+    print("test")
+    println(bundleDebugAar)
     publishing {
         publications {
             aar(MavenPublication) {
+                groupId = 'com.fullstorydev'
+                artifactId = 'FullstorySegmentMiddleware'
+                version = '1.1'
+
+//                from components.java
                 artifact bundleDebugAar
             }
         }
