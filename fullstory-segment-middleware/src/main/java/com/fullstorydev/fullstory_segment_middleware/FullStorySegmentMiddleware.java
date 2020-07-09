@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.fullstory.FS;
 import com.segment.analytics.Middleware;
@@ -142,7 +143,8 @@ public class FullStorySegmentMiddleware implements Middleware {
         chain.proceed(newPayload);
     }
 
-    private BasePayload getNewPayloadWithFSURL(BasePayload payload, Map<String, Object> context) {
+    @VisibleForTesting
+    BasePayload getNewPayloadWithFSURL(BasePayload payload, Map<String, Object> context) {
         // properties obj is immutable so we need to create a new one
         ValueMap properties = payload.getValueMap("properties");
         Map<String, Object> fullStoryProperties = new HashMap<>();
@@ -170,7 +172,8 @@ public class FullStorySegmentMiddleware implements Middleware {
         return null;
     }
 
-    private Map<String, Object> getSuffixedProps (Map<String, Object> props) {
+    @VisibleForTesting
+    Map<String, Object> getSuffixedProps (Map<String, Object> props) {
         // transform props to comply with FS custom events requirement
         // TODO: Segment should not allow with circular dependency, but we should check anyway
         Map<String, Object> mutableProps = new HashMap<>();
@@ -224,7 +227,8 @@ public class FullStorySegmentMiddleware implements Middleware {
         return mutableProps;
     }
 
-    private void addSimpleObjectToMap (Map<String, Object> map, String key, Object obj) {
+    @VisibleForTesting
+    void addSimpleObjectToMap (Map<String, Object> map, String key, Object obj) {
         // add one obj into the result map, check if the key with suffix already exists, if so add to the result arrays.
         // key is already suffixed, and always in singular form
         Object item = map.get(key);
@@ -244,7 +248,8 @@ public class FullStorySegmentMiddleware implements Middleware {
         }
     }
 
-    private String getSuffixStringFromSimpleObject(@NonNull Object item) {
+    @VisibleForTesting
+    String getSuffixStringFromSimpleObject(Object item) {
         // default to no suffix;
         String suffix = "";
         if ( item instanceof String || item instanceof Character) {
@@ -264,7 +269,8 @@ public class FullStorySegmentMiddleware implements Middleware {
         return suffix;
     }
 
-    private Object[] getArrayObjectFromArray(Object arr) {
+    @VisibleForTesting
+    Object[] getArrayObjectFromArray(Object arr) {
         if (arr instanceof Object[]) return (Object[]) arr;
 
         int len = Array.getLength(arr);
@@ -275,7 +281,8 @@ public class FullStorySegmentMiddleware implements Middleware {
         return resultArr;
     }
 
-    private void pluralizeAllArrayKeysInMap(Map<String,Object> map) {
+    @VisibleForTesting
+    void pluralizeAllArrayKeysInMap(Map<String,Object> map) {
         Set<String> keySet = new HashSet<>(map.keySet());
         for (String key :keySet) {
             if (map.get(key) instanceof Collection) {
