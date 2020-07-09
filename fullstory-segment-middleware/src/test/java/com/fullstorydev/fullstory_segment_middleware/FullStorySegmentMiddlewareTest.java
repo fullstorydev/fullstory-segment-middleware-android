@@ -47,12 +47,12 @@ public class FullStorySegmentMiddlewareTest {
         Assert.assertEquals("_str", output);
     }
 
-//    @Test
-//    public void getSuffixStringFromSimpleObject_Char_ReturnsStr() {
-//        char input = 'a';
-//        String output = fullStorySegmentMiddleware.getSuffixStringFromSimpleObject(input);
-//        Assert.assertEquals("_str", output);
-//    }
+    @Test
+    public void getSuffixStringFromSimpleObject_Char_ReturnsStr() {
+        char input = 'a';
+        String output = fullStorySegmentMiddleware.getSuffixStringFromSimpleObject(input);
+        Assert.assertEquals("_str", output);
+    }
 
     @Test
     public void getSuffixStringFromSimpleObject_Int_ReturnsInt() {
@@ -61,19 +61,19 @@ public class FullStorySegmentMiddlewareTest {
         Assert.assertEquals("_int", output);
     }
 
-//    @Test
-//    public void getSuffixStringFromSimpleObject_Short_ReturnsInt() {
-//        short input = 1;
-//        String output = fullStorySegmentMiddleware.getSuffixStringFromSimpleObject(input);
-//        Assert.assertEquals("_int", output);
-//    }
-//
-//    @Test
-//    public void getSuffixStringFromSimpleObject_Long_ReturnsInt() {
-//        long input = 1;
-//        String output = fullStorySegmentMiddleware.getSuffixStringFromSimpleObject(input);
-//        Assert.assertEquals("_int", output);
-//    }
+    @Test
+    public void getSuffixStringFromSimpleObject_Short_ReturnsInt() {
+        short input = 1;
+        String output = fullStorySegmentMiddleware.getSuffixStringFromSimpleObject(input);
+        Assert.assertEquals("_int", output);
+    }
+
+    @Test
+    public void getSuffixStringFromSimpleObject_Long_ReturnsInt() {
+        long input = 1;
+        String output = fullStorySegmentMiddleware.getSuffixStringFromSimpleObject(input);
+        Assert.assertEquals("_int", output);
+    }
 
     @Test
     public void getSuffixStringFromSimpleObject_Double_ReturnsReal() {
