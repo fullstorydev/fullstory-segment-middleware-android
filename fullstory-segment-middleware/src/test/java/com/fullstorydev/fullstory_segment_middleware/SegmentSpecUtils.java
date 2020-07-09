@@ -301,15 +301,6 @@ public class SegmentSpecUtils {
         return map;
     }
 
-    static Map<String, Object> ECommerceEventsProductReviewed() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("product_id","507f1f77bcf86cd799439011");
-        map.put("review_id","kdfjrj39fj39jf3");
-        map.put("review_body","I love this product");
-        map.put("rating",5);
-        return map;
-    }
-
     static Map<String, Object> ECommerceEventsCartShared() {
         Map<String, Object> map = new HashMap<>();
         map.put("share_via", "email");
