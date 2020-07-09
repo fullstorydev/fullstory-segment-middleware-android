@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -37,9 +38,7 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
     }
 
-    // Test for getSuffixStringFromSimpleObject
-    // input: object
-    // output: parsed suffix as string
+    // getSuffixStringFromSimpleObject: return suffix string for an object
     @Test
     public void getSuffixStringFromSimpleObject_String_ReturnsStr() {
         String input = "this is a string";
