@@ -279,7 +279,7 @@ public class SegmentSpecUtils {
         Map<String, Object> map = new HashMap<>();
         map.put("wishlist_id", "skdjsidjsdkdj29j");
         map.put("wishlist_name", "Loved Games");
-        map.put("cart_id", "'99j2d92j9dj29dj29d2d'");
+        map.put("cart_id", "99j2d92j9dj29dj29d2d");
         map.putAll(getMonopolyProduct());
         return map;
     }
