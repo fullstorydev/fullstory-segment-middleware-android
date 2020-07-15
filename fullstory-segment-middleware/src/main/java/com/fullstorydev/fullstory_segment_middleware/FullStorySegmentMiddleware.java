@@ -160,6 +160,4 @@ public class FullStorySegmentMiddleware implements Middleware {
         }
         return null;
     }
-
-
 }
