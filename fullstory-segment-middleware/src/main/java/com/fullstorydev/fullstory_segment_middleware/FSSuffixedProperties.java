@@ -1,7 +1,5 @@
 package com.fullstorydev.fullstory_segment_middleware;
 
-import androidx.annotation.VisibleForTesting;
-
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -70,7 +68,6 @@ public class FSSuffixedProperties {
         pluralizeAllArrayKeys();
     }
 
-    @VisibleForTesting
     void addSimpleObject (String key, Object obj) {
         // add one obj into the result map, check if the key with suffix already exists, if so add to the result arrays.
         // key is already suffixed, and always in singular form
@@ -91,7 +88,6 @@ public class FSSuffixedProperties {
         }
     }
 
-    @VisibleForTesting
     String getSuffixStringFromSimpleObject(Object item) {
         // default to no suffix;
         String suffix = "";
@@ -112,7 +108,6 @@ public class FSSuffixedProperties {
         return suffix;
     }
 
-    @VisibleForTesting
     Object[] getArrayObjectFromArray(Object arr) {
         if (arr instanceof Object[]) return (Object[]) arr;
 
@@ -124,7 +119,6 @@ public class FSSuffixedProperties {
         return resultArr;
     }
 
-    @VisibleForTesting ()
     void pluralizeAllArrayKeys() {
         Set<String> keySet = new HashSet<>(this.suffixedProperties.keySet());
         for (String key :keySet) {

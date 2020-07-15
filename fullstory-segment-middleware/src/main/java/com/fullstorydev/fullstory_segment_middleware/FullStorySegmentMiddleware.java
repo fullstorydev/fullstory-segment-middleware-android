@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
-
 import com.fullstory.FS;
 import com.segment.analytics.Middleware;
 import com.segment.analytics.ValueMap;
@@ -19,17 +16,10 @@ import com.segment.analytics.integrations.TrackPayload;
 import static com.segment.analytics.internal.Utils.getSegmentSharedPreferences;
 import static com.segment.analytics.internal.Utils.isNullOrEmpty;
 
-import java.lang.reflect.Array;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
 
 public class FullStorySegmentMiddleware implements Middleware {
 
@@ -143,7 +133,6 @@ public class FullStorySegmentMiddleware implements Middleware {
         chain.proceed(newPayload);
     }
 
-    @VisibleForTesting
     BasePayload getNewPayloadWithFSURL(BasePayload payload, Map<String, Object> context) {
         // properties obj is immutable so we need to create a new one
         ValueMap properties = payload.getValueMap("properties");
