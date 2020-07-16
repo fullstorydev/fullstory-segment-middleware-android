@@ -135,12 +135,14 @@ public class FullStorySegmentMiddleware implements Middleware {
     }
 
     void addFSUrlToContext(Map<String, Object> context){
+        if(context == null) return null;
         // now URL API available post FullStory plugin v1.3.0
         // context.put("fullstoryUrl", FS.getCurrentSessionURL(true));
         context.put("fullstoryUrl", FS.getCurrentSessionURL());
     }
 
     BasePayload getNewPayloadWithFSURL(BasePayload payload, Map<String, Object> context) {
+        if(payload == null) return null;
         // properties obj is immutable so we need to create a new one
         ValueMap properties = payload.getValueMap("properties");
         Map<String, Object> fullStoryProperties = new HashMap<>();
