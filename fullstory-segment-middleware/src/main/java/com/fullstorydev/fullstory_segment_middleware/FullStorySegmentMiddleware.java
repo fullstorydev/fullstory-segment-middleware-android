@@ -135,10 +135,11 @@ public class FullStorySegmentMiddleware implements Middleware {
     }
 
     void addFSUrlToContext(Map<String, Object> context){
-        if(context == null) return null;
-        // now URL API available post FullStory plugin v1.3.0
-        // context.put("fullstoryUrl", FS.getCurrentSessionURL(true));
-        context.put("fullstoryUrl", FS.getCurrentSessionURL());
+        if(context != null) {
+            // now URL API available post FullStory plugin v1.3.0
+            // context.put("fullstoryUrl", FS.getCurrentSessionURL(true));
+            context.put("fullstoryUrl", FS.getCurrentSessionURL());
+        }
     }
 
     BasePayload getNewPayloadWithFSURL(BasePayload payload, Map<String, Object> context) {
