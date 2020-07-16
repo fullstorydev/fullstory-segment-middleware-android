@@ -262,6 +262,14 @@ public class FSSuffixedPropertiesTest {
         Assert.assertEquals(output, fsSuffixedProperties.suffixedProperties);
     }
 
+    @Test
+    public void getSuffixedProperties_ReturnsProperties() {
+        Map<String, Object> input = new HashMap<>();
+        input.put("key_strs", new ArrayList<>(Arrays.asList("val1","val2")));
+        fsSuffixedProperties.suffixedProperties = input;
+        Assert.assertEquals(input, fsSuffixedProperties.getSuffixedProperties());
+    }
+
     // Test for constructor with Segment E Commerce Events
     @Test
     public void constructor_ECommerceEventsProductsSearched() {
