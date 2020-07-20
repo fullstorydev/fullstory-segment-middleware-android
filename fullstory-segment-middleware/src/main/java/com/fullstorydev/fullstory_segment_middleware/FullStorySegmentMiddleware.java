@@ -126,6 +126,7 @@ public class FullStorySegmentMiddleware implements Middleware {
         // if enabled you will receive at your destination events with FS URL added
         Map<String, Object> context = new LinkedHashMap<>(payload.context());
         if (this.enableFSSessionURLInEvents) {
+            addFSUrlToContext(context);
             newPayload = getNewPayloadWithFSURL(payload, context);
         }
 
@@ -133,7 +134,16 @@ public class FullStorySegmentMiddleware implements Middleware {
         chain.proceed(newPayload);
     }
 
+    void addFSUrlToContext(Map<String, Object> context){
+        if(context != null) {
+            // now URL API available post FullStory plugin v1.3.0
+            // context.put("fullstoryUrl", FS.getCurrentSessionURL(true));
+            context.put("fullstoryUrl", FS.getCurrentSessionURL());
+        }
+    }
+
     BasePayload getNewPayloadWithFSURL(BasePayload payload, Map<String, Object> context) {
+        if(payload == null) return null;
         // properties obj is immutable so we need to create a new one
         ValueMap properties = payload.getValueMap("properties");
         Map<String, Object> fullStoryProperties = new HashMap<>();
@@ -142,7 +152,6 @@ public class FullStorySegmentMiddleware implements Middleware {
         fullStoryProperties.put("fullstoryUrl", FS.getCurrentSessionURL());
         // now URL API available post FullStory plugin v1.3.0
         // fullStoryProperties.put("fullstoryNowUrl", FS.getCurrentSessionURL(true));
-        context.put("fullstoryUrl", FS.getCurrentSessionURL());
 
         if (payload.type() == BasePayload.Type.screen) {
             ScreenPayload screenPayload = (ScreenPayload) payload;
