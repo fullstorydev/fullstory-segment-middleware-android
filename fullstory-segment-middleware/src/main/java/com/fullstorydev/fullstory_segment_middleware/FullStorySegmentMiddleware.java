@@ -106,7 +106,8 @@ public class FullStorySegmentMiddleware implements Middleware {
             case screen:
                 ScreenPayload screenPayload = (ScreenPayload) payload;
                 if (this.enableSendScreenAsEvents) {
-                    FS.event("Segment Screen: " + screenPayload.name(), screenPayload.properties());
+                    FSSuffixedProperties props = new FSSuffixedProperties(screenPayload.properties());
+                    FS.event("Segment Screen: " + screenPayload.name(), props.getSuffixedProperties());
                 }
                 break;
 
