@@ -27,7 +27,7 @@ public class FullStorySegmentMiddleware implements Middleware {
     public boolean enableFSSessionURLInEvents = true;
     public boolean enableSendScreenAsEvents = false;
     public boolean allowlistAllTrackEvents = false;
-    private ArrayList<String> allowlistedEvents;
+    ArrayList<String> allowlistedEvents;
 
 
     private final String TAG = "FullStoryMiddleware";
@@ -72,6 +72,7 @@ public class FullStorySegmentMiddleware implements Middleware {
 
     @Override
     public void intercept(Chain chain) {
+        if (chain == null) return;
         // Get the original payload from chain
         BasePayload payload = chain.payload();
 

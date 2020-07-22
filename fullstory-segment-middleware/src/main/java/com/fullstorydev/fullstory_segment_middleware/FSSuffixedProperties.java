@@ -25,6 +25,7 @@ public class FSSuffixedProperties {
 
         while (!stack.empty()) {
             Map<String,Object> map = stack.pop();
+            if(map == null) continue;
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();
                 Object item = entry.getValue();
