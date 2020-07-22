@@ -27,7 +27,7 @@ public class FullStorySegmentMiddleware implements Middleware {
     public boolean enableFSSessionURLInEvents = true;
     public boolean enableSendScreenAsEvents = false;
     public boolean allowlistAllTrackEvents = false;
-    ArrayList<String> allowlistedEvents;
+    private ArrayList<String> allowlistedEvents;
 
 
     private final String TAG = "FullStoryMiddleware";

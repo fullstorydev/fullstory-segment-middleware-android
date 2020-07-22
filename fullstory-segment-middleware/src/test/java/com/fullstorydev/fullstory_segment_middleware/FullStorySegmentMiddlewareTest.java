@@ -106,7 +106,7 @@ public class FullStorySegmentMiddlewareTest {
 
         // FS.event is called with properties
         Map<String, String> userVars = new HashMap<>();
-        userVars.put("groupID", groupPayload.groupId());
+        userVars.put("groupID_str", groupPayload.groupId());
         verifyStatic(FS.class, VerificationModeFactory.times(1));
         FS.setUserVars(userVars);
     }
@@ -146,9 +146,11 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         // FS.event is called with properties
-        map.put("groupID", groupPayload.groupId());
+        Map<String, String> suffixedMap = new HashMap<>();
+        suffixedMap.put("groupID_str", groupPayload.groupId());
+        suffixedMap.put("industry_str", "retail");
         verifyStatic(FS.class, VerificationModeFactory.times(1));
-        FS.setUserVars(map);
+        FS.setUserVars(suffixedMap);
     }
 
     @Test
@@ -164,7 +166,7 @@ public class FullStorySegmentMiddlewareTest {
 
         // FS.event is called with properties
         verifyStatic(FS.class, VerificationModeFactory.times(1));
-        FS.identify(identifyPayload.userId(), null);
+        FS.identify(identifyPayload.userId(), new HashMap<>());
     }
 
     @Test
