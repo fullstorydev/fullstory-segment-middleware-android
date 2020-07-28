@@ -27,7 +27,7 @@ public class FullStorySegmentMiddleware implements Middleware {
     public boolean enableFSSessionURLInEvents = true;
     public boolean enableSendScreenAsEvents = false;
     public boolean allowlistAllTrackEvents = false;
-    private ArrayList<String> allowlistedEvents;
+    ArrayList<String> allowlistedEvents;
 
 
     private final String TAG = "FullStoryMiddleware";
@@ -72,6 +72,7 @@ public class FullStorySegmentMiddleware implements Middleware {
 
     @Override
     public void intercept(Chain chain) {
+        if (chain == null) return;
         // Get the original payload from chain
         BasePayload payload = chain.payload();
 
@@ -87,23 +88,26 @@ public class FullStorySegmentMiddleware implements Middleware {
                 // User will always be tied to the newest groupID that you set, group traits will not be included by default!
                 // this is because if the user changes it's group which no longer has certain traits, we will not detect when to clear them in FS and user will be tied to old group data
                 HashMap<String, Object> userVars = new HashMap<>();
-                userVars.put("groupID", groupPayload.groupId());
+                userVars.put("groupID_str", groupPayload.groupId());
                 // optionally enable group traits to be passed into user vars
                 if (enableGroupTraitsAsUserVars && !isNullOrEmpty(groupPayload.traits())) {
-                    userVars.putAll(groupPayload.traits());
+                    FSSuffixedProperties traits = new FSSuffixedProperties(groupPayload.traits());
+                    userVars.putAll(traits.getSuffixedProperties());
                 }
                 FS.setUserVars(userVars);
                 break;
 
             case identify:
                 IdentifyPayload identifyPayload = (IdentifyPayload) payload;
-                FS.identify(identifyPayload.userId(), identifyPayload.traits());
+                FSSuffixedProperties traits = new FSSuffixedProperties(identifyPayload.traits());
+                FS.identify(identifyPayload.userId(), traits.getSuffixedProperties());
                 break;
 
             case screen:
                 ScreenPayload screenPayload = (ScreenPayload) payload;
                 if (this.enableSendScreenAsEvents) {
-                    FS.event("Segment Screen: " + screenPayload.name(), screenPayload.properties());
+                    FSSuffixedProperties props = new FSSuffixedProperties(screenPayload.properties());
+                    FS.event("Segment Screen: " + screenPayload.name(), props.getSuffixedProperties());
                 }
                 break;
 
