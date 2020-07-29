@@ -91,7 +91,7 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(groupPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
+        // verify that we did not block chain.proceed, nor modified the correct payload
         verify(mockChain, times(1)).proceed(groupPayload);
     }
 
@@ -104,10 +104,12 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(groupPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // FS.event is called with properties
+        // verify that static method setUserVars is called with the correct vars
         Map<String, String> userVars = new HashMap<>();
         userVars.put("groupID_str", groupPayload.groupId());
         verifyStatic(FS.class, VerificationModeFactory.times(1));
+        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.setUserVars(userVars);
     }
 
@@ -126,7 +128,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(groupPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
         verify(mockChain, times(1)).proceed(groupPayload);
     }
 
@@ -145,7 +146,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(groupPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // FS.event is called with properties
         Map<String, String> suffixedMap = new HashMap<>();
         suffixedMap.put("groupID_str", groupPayload.groupId());
         suffixedMap.put("industry_str", "retail");
@@ -164,7 +164,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(identifyPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // FS.event is called with properties
         verifyStatic(FS.class, VerificationModeFactory.times(1));
         FS.identify(identifyPayload.userId(), new HashMap<>());
     }
@@ -180,7 +179,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(identifyPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
         verify(mockChain, times(1)).proceed(identifyPayload);
     }
 
@@ -197,7 +195,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // FS.event is called with properties
         verifyStatic(FS.class, VerificationModeFactory.times(1));
         FS.event("Segment Screen: " + screenPayload.name(), screenPayload.properties());
     }
@@ -215,7 +212,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
         verify(mockChain, times(1)).proceed(screenPayload);
     }
 
@@ -232,7 +228,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // FS.event is called with properties
         verifyStatic(FS.class, VerificationModeFactory.times(0));
         FS.event(any(), any());
     }
@@ -250,7 +245,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
         verify(mockChain, times(1)).proceed(screenPayload);
     }
 
@@ -264,7 +258,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(trackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // FS.event is called with properties
         verifyStatic(FS.class, VerificationModeFactory.times(0));
         FS.event(any(),any());
     }
@@ -282,7 +275,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
         verify(mockChain, times(1)).proceed(screenPayload);
     }
 
@@ -298,7 +290,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(trackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // FS.event is called with properties
         verifyStatic(FS.class, VerificationModeFactory.times(1));
         FS.event(trackPayload.event(), trackPayload.properties());
     }
@@ -315,7 +306,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(trackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
         verify(mockChain, times(1)).proceed(trackPayload);
     }
 
@@ -328,7 +318,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(trackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // FS.event is called with properties
         verifyStatic(FS.class, VerificationModeFactory.times(1));
         FS.event(trackPayload.event(), trackPayload.properties());
     }
@@ -343,7 +332,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(trackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
         verify(mockChain, times(1)).proceed(trackPayload);
     }
 
@@ -357,7 +345,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(aliasPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
         verify(mockChain, times(1)).proceed(aliasPayload);
     }
 
@@ -370,7 +357,6 @@ public class FullStorySegmentMiddlewareTest {
         when(mockChain.payload()).thenReturn(inputTrackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // chain.proceed is called with the correct payload
         Map<String, Object> newContext = new HashMap<>(inputTrackPayload.context());
         newContext.put("fullstoryUrl", FS.getCurrentSessionURL());
         Map<String, Object> newProperties = new HashMap<>(inputTrackPayload.properties());
