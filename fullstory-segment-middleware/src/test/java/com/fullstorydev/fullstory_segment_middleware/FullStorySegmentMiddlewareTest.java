@@ -170,7 +170,7 @@ public class FullStorySegmentMiddlewareTest {
     }
 
     @Test
-    public void intercept_IdentifykPayloadChain_UserTraits_ChainProceedCalled() {
+    public void intercept_IdentifyPayloadChain_UserTraits_ChainProceedCalled() {
         fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -220,7 +220,7 @@ public class FullStorySegmentMiddlewareTest {
     }
 
     @Test
-    public void intercept_ScreenPayloadChain_EnableSendScreenAsEvents_FSEventNotCalled() {
+    public void intercept_ScreenPayloadChain_DisableSendScreenAsEvents_FSEventNotCalled() {
         fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableSendScreenAsEvents = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
