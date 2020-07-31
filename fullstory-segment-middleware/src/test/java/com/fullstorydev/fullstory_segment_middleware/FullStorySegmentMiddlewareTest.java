@@ -84,20 +84,20 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_GroupPayloadChain_DisableGroupTraitsAsUserVars_ChainProceedCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "FakeSegmentWriteKey");
         fullStorySegmentMiddleware.enableGroupTraitsAsUserVars = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
         GroupPayload groupPayload = new GroupPayload.Builder().userId("userId").groupId("groupId").build();
         when(mockChain.payload()).thenReturn(groupPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
 
-        // verify that we did not block chain.proceed, nor modified the correct payload
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(groupPayload);
     }
 
     @Test
     public void intercept_GroupPayloadChain_DisableGroupTraitsAsUserVars_FSSetUserVarsCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "FakeSegmentWriteKey");
         fullStorySegmentMiddleware.enableGroupTraitsAsUserVars = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
         GroupPayload groupPayload = new GroupPayload.Builder().userId("userId").groupId("groupId").build();
@@ -127,7 +127,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(groupPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
-
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(groupPayload);
     }
 
@@ -149,7 +149,10 @@ public class FullStorySegmentMiddlewareTest {
         Map<String, String> suffixedMap = new HashMap<>();
         suffixedMap.put("groupID_str", groupPayload.groupId());
         suffixedMap.put("industry_str", "retail");
+
         verifyStatic(FS.class, VerificationModeFactory.times(1));
+        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.setUserVars(suffixedMap);
     }
 
@@ -165,6 +168,8 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(1));
+        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.identify(identifyPayload.userId(), new HashMap<>());
     }
 
@@ -178,7 +183,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(identifyPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
-
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(identifyPayload);
     }
 
@@ -196,6 +201,8 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(1));
+        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event("Segment Screen: " + screenPayload.name(), screenPayload.properties());
     }
 
@@ -211,7 +218,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
-
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(screenPayload);
     }
 
@@ -229,6 +236,8 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(0));
+        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event(any(), any());
     }
 
@@ -244,7 +253,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
-
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(screenPayload);
     }
 
@@ -259,6 +268,8 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(0));
+        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event(any(),any());
     }
 
@@ -274,7 +285,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
-
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(screenPayload);
     }
 
@@ -291,6 +302,8 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(1));
+        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event(trackPayload.event(), trackPayload.properties());
     }
 
@@ -305,7 +318,7 @@ public class FullStorySegmentMiddlewareTest {
         TrackPayload trackPayload = new TrackPayload.Builder().userId("userId").event("Product Added").build();
         when(mockChain.payload()).thenReturn(trackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
-
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(trackPayload);
     }
 
@@ -319,6 +332,8 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(1));
+        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event(trackPayload.event(), trackPayload.properties());
     }
 
@@ -331,7 +346,7 @@ public class FullStorySegmentMiddlewareTest {
         TrackPayload trackPayload = new TrackPayload.Builder().userId("userId").event("event").build();
         when(mockChain.payload()).thenReturn(trackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
-
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(trackPayload);
     }
 
@@ -344,7 +359,7 @@ public class FullStorySegmentMiddlewareTest {
         AliasPayload aliasPayload = new AliasPayload.Builder().previousId("previousId").userId("userId").build();
         when(mockChain.payload()).thenReturn(aliasPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
-
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(aliasPayload);
     }
 
@@ -366,7 +381,7 @@ public class FullStorySegmentMiddlewareTest {
                 .context(newContext)
                 .properties(newProperties)
                 .build();
-
+        // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(newTrackPayload);
     }
 
