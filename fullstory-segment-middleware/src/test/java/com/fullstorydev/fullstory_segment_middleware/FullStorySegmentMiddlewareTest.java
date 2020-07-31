@@ -27,6 +27,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -42,7 +43,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({FS.class, Log.class})
 public class FullStorySegmentMiddlewareTest {
-
     @Mock
     Context mockContext;
     @Mock
@@ -50,11 +50,10 @@ public class FullStorySegmentMiddlewareTest {
     @Mock
     Middleware.Chain mockChain;
 
-    FullStorySegmentMiddleware fullStorySegmentMiddleware;
-
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
+
         when(mockContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mockPrefs);
 
         PowerMockito.mockStatic(FS.class);
@@ -64,29 +63,32 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void constructor_WithAllowListedEvent_AssertAllowList() {
-        ArrayList<String> allowList = new ArrayList<>();
+        List<String> allowList = new ArrayList<>();
         allowList.add("Product Added");
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey", allowList);
-        Assert.assertEquals(allowList, fullStorySegmentMiddleware.allowlistedEvents);
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey", allowList);
+
+        Assert.assertEquals("Testing allowlistedEvents",allowList, fullStorySegmentMiddleware.allowlistedEvents);
         // TODO: assert logging for SharedPreferences listener code
     }
 
     @Test
     public void constructor_NoAllowListedEvent_AssertDefaultValues() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
-        Assert.assertTrue(fullStorySegmentMiddleware.enableFSSessionURLInEvents);
-        Assert.assertFalse(fullStorySegmentMiddleware.enableGroupTraitsAsUserVars);
-        Assert.assertFalse(fullStorySegmentMiddleware.enableSendScreenAsEvents);
-        Assert.assertFalse(fullStorySegmentMiddleware.allowlistAllTrackEvents);
-        Assert.assertTrue(fullStorySegmentMiddleware.allowlistedEvents.isEmpty());
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+
+        Assert.assertTrue("Testing enableFSSessionURLInEvents", fullStorySegmentMiddleware.enableFSSessionURLInEvents);
+        Assert.assertFalse("Testing enableGroupTraitsAsUserVars", fullStorySegmentMiddleware.enableGroupTraitsAsUserVars);
+        Assert.assertFalse("Testing enableSendScreenAsEvents", fullStorySegmentMiddleware.enableSendScreenAsEvents);
+        Assert.assertFalse("Testing allowlistAllTrackEvents", fullStorySegmentMiddleware.allowlistAllTrackEvents);
+        Assert.assertTrue("Testing allowlistedEvents", fullStorySegmentMiddleware.allowlistedEvents.isEmpty());
         // TODO: assert logging for null allowlist warning
     }
 
     @Test
     public void intercept_GroupPayloadChain_DisableGroupTraitsAsUserVars_ChainProceedCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "FakeSegmentWriteKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "FakeSegmentWriteKey");
         fullStorySegmentMiddleware.enableGroupTraitsAsUserVars = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
+
         GroupPayload groupPayload = new GroupPayload.Builder().userId("userId").groupId("groupId").build();
         when(mockChain.payload()).thenReturn(groupPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
@@ -97,9 +99,10 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_GroupPayloadChain_DisableGroupTraitsAsUserVars_FSSetUserVarsCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "FakeSegmentWriteKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "FakeSegmentWriteKey");
         fullStorySegmentMiddleware.enableGroupTraitsAsUserVars = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
+
         GroupPayload groupPayload = new GroupPayload.Builder().userId("userId").groupId("groupId").build();
         when(mockChain.payload()).thenReturn(groupPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
@@ -115,9 +118,10 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_GroupPayloadChain_EnableGroupTraitsAsUserVars_ChainProceedCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableGroupTraitsAsUserVars = true;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
+
         Map<String, String> map = new HashMap<>();
         map.put("industry", "retail");
         GroupPayload groupPayload = new GroupPayload.Builder()
@@ -134,9 +138,10 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_GroupPayloadChain_EnableGroupTraitsAsUserVars_FSSetUserVarsCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableGroupTraitsAsUserVars = true;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
+
         Map<String, String> map = new HashMap<>();
         map.put("industry", "retail");
         GroupPayload groupPayload = new GroupPayload.Builder()
@@ -159,7 +164,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_IdentifyPayloadChain_NoTraits_FSIdentifyCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
         IdentifyPayload identifyPayload = new IdentifyPayload.Builder()
@@ -176,7 +181,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_IdentifyPayloadChain_UserTraits_ChainProceedCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
         IdentifyPayload identifyPayload = new IdentifyPayload.Builder()
@@ -191,7 +196,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_ScreenPayloadChain_EnableSendScreenAsEvents_FSEventCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableSendScreenAsEvents = true;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -210,7 +215,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_ScreenPayloadChain_EnableSendScreenAsEvents_ChainProceedCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableSendScreenAsEvents = true;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -227,7 +232,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_ScreenPayloadChain_DisableSendScreenAsEvents_FSEventNotCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableSendScreenAsEvents = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -246,7 +251,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_ScreenPayloadChain_DisableSendScreenAsEvents_ChainProceedCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableSendScreenAsEvents = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -263,7 +268,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_TrackPayloadChain_DisallowlistAllTrackEvents_NoAllowlistedEvents_FSEventNotCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.allowlistAllTrackEvents = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -279,7 +284,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_TrackPayloadChain_DisllowlistAllTrackEvents_NoAllowlistedEvents_ChainProceedCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.allowlistAllTrackEvents = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -298,7 +303,7 @@ public class FullStorySegmentMiddlewareTest {
     public void intercept_TrackPayloadChain_DisallowlistAllTrackEvents_EventAllowlisted_FSEventCalled() {
         ArrayList<String> allowList = new ArrayList<>();
         allowList.add("Product Added");
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey", allowList);
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey", allowList);
         fullStorySegmentMiddleware.allowlistAllTrackEvents = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -316,7 +321,7 @@ public class FullStorySegmentMiddlewareTest {
     public void intercept_TrackPayloadChain_DisllowlistAllTrackEvents_AllowlistedEvents_ChainProceedCalled() {
         ArrayList<String> allowList = new ArrayList<>();
         allowList.add("Product Added");
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey", allowList);
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey", allowList);
         fullStorySegmentMiddleware.allowlistAllTrackEvents = false;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -330,7 +335,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_TrackPayloadChain_AllowlistAllTrackEvents_FSEventCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.allowlistAllTrackEvents = true;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
         TrackPayload trackPayload = new TrackPayload.Builder().userId("userId").event("event").build();
@@ -345,7 +350,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_TrackPayloadChain_AllowlistAllTrackEvents_ChainProceedCalled() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.allowlistAllTrackEvents = true;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -359,7 +364,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_AliasPayload_DefaultCase() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.allowlistAllTrackEvents = true;
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = false;
 
@@ -373,7 +378,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void intercept_EnableFSSessionURLInEvents_VerifyChainProceed() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         fullStorySegmentMiddleware.enableFSSessionURLInEvents = true;
 
         TrackPayload inputTrackPayload = new TrackPayload.Builder().userId("userId").event("event").build();
@@ -396,7 +401,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void addFSUrlToContext_AddsURLToContext() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         Map<String, Object> input = new HashMap<>();
         fullStorySegmentMiddleware.addFSUrlToContext(input);
 
@@ -408,7 +413,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void getNewPayloadWithFSURL_TrackPayload_ReturnsTrackPayload() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         Map<String, Object> context = new HashMap<>();
         TrackPayload input = new TrackPayload.Builder().userId("userId").event("event").build();
         BasePayload output = fullStorySegmentMiddleware.getNewPayloadWithFSURL(input,context);
@@ -418,7 +423,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void getNewPayloadWithFSURL_TrackPayload_ReturnsTrackPayloadWithFSURL() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         Map<String, Object> context = new HashMap<>();
         TrackPayload input = new TrackPayload.Builder().userId("userId").event("event").build();
         TrackPayload output = (TrackPayload) fullStorySegmentMiddleware.getNewPayloadWithFSURL(input,context);
@@ -432,7 +437,7 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void getNewPayloadWithFSURL_ScreenPayload_ReturnsScreenPayload() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         Map<String, Object> context = new HashMap<>();
         ScreenPayload input = new ScreenPayload.Builder().userId("userId").name("MainActivity").build();
         BasePayload output = fullStorySegmentMiddleware.getNewPayloadWithFSURL(input,context);
@@ -442,14 +447,14 @@ public class FullStorySegmentMiddlewareTest {
 
     @Test
     public void getNewPayloadWithFSURL_ScreenPayload_ReturnsScreenPayloadWithFSURL() {
-        fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
+        FullStorySegmentMiddleware fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         Map<String, Object> context = new HashMap<>();
         ScreenPayload input = new ScreenPayload.Builder().userId("userId").name("MainActivity").build();
         ScreenPayload output = (ScreenPayload) fullStorySegmentMiddleware.getNewPayloadWithFSURL(input,context);
 
         Properties expect = new Properties();
         expect.put("fullstoryUrl", FS.getCurrentSessionURL());
-        
+
         Assert.assertEquals(output.properties(), expect);
     }
 }
