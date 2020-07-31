@@ -63,7 +63,7 @@ public class FullStorySegmentMiddlewareTest {
     }
 
     @Test
-    public void constructor_WithAllowListedEvent() {
+    public void constructor_WithAllowListedEvent_AssertAllowList() {
         ArrayList<String> allowList = new ArrayList<>();
         allowList.add("Product Added");
         fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey", allowList);
@@ -72,7 +72,7 @@ public class FullStorySegmentMiddlewareTest {
     }
 
     @Test
-    public void constructor_NoAllowListedEvent() {
+    public void constructor_NoAllowListedEvent_AssertDefaultValues() {
         fullStorySegmentMiddleware = new FullStorySegmentMiddleware(mockContext, "SegmentWriteMockKey");
         Assert.assertTrue(fullStorySegmentMiddleware.enableFSSessionURLInEvents);
         Assert.assertFalse(fullStorySegmentMiddleware.enableGroupTraitsAsUserVars);
@@ -127,6 +127,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(groupPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
+
         // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(groupPayload);
     }
@@ -183,6 +184,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(identifyPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
+
         // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(identifyPayload);
     }
@@ -218,6 +220,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
+
         // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(screenPayload);
     }
@@ -253,6 +256,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
+
         // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(screenPayload);
     }
@@ -285,6 +289,7 @@ public class FullStorySegmentMiddlewareTest {
                 .build();
         when(mockChain.payload()).thenReturn(screenPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
+
         // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(screenPayload);
     }
@@ -318,6 +323,7 @@ public class FullStorySegmentMiddlewareTest {
         TrackPayload trackPayload = new TrackPayload.Builder().userId("userId").event("Product Added").build();
         when(mockChain.payload()).thenReturn(trackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
+
         // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(trackPayload);
     }
@@ -346,6 +352,7 @@ public class FullStorySegmentMiddlewareTest {
         TrackPayload trackPayload = new TrackPayload.Builder().userId("userId").event("event").build();
         when(mockChain.payload()).thenReturn(trackPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
+
         // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(trackPayload);
     }
@@ -359,6 +366,7 @@ public class FullStorySegmentMiddlewareTest {
         AliasPayload aliasPayload = new AliasPayload.Builder().previousId("previousId").userId("userId").build();
         when(mockChain.payload()).thenReturn(aliasPayload);
         fullStorySegmentMiddleware.intercept(mockChain);
+
         // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(aliasPayload);
     }
@@ -381,6 +389,7 @@ public class FullStorySegmentMiddlewareTest {
                 .context(newContext)
                 .properties(newProperties)
                 .build();
+
         // verify that we did not block chain.proceed, nor modified the payload
         verify(mockChain, times(1)).proceed(newTrackPayload);
     }
@@ -393,6 +402,7 @@ public class FullStorySegmentMiddlewareTest {
 
         Map<String, Object> expect = new HashMap<>();
         expect.put("fullstoryUrl", FS.getCurrentSessionURL());
+
         Assert.assertEquals(expect, input);
     }
 
@@ -415,6 +425,7 @@ public class FullStorySegmentMiddlewareTest {
 
         Properties expect = new Properties();
         expect.put("fullstoryUrl", FS.getCurrentSessionURL());
+
         Assert.assertEquals(output.properties(), expect);
     }
 
@@ -438,6 +449,7 @@ public class FullStorySegmentMiddlewareTest {
 
         Properties expect = new Properties();
         expect.put("fullstoryUrl", FS.getCurrentSessionURL());
+        
         Assert.assertEquals(output.properties(), expect);
     }
 }
