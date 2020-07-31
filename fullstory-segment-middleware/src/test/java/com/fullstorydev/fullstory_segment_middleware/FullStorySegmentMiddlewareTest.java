@@ -108,7 +108,7 @@ public class FullStorySegmentMiddlewareTest {
         Map<String, String> userVars = new HashMap<>();
         userVars.put("groupID_str", groupPayload.groupId());
         verifyStatic(FS.class, VerificationModeFactory.times(1));
-        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // IMPORTANT:  Call the static method you want to verify.
         // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.setUserVars(userVars);
     }
@@ -151,7 +151,7 @@ public class FullStorySegmentMiddlewareTest {
         suffixedMap.put("industry_str", "retail");
 
         verifyStatic(FS.class, VerificationModeFactory.times(1));
-        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // IMPORTANT:  Call the static method you want to verify.
         // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.setUserVars(suffixedMap);
     }
@@ -168,7 +168,7 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(1));
-        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // IMPORTANT:  Call the static method you want to verify.
         // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.identify(identifyPayload.userId(), new HashMap<>());
     }
@@ -201,7 +201,7 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(1));
-        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // IMPORTANT:  Call the static method you want to verify.
         // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event("Segment Screen: " + screenPayload.name(), screenPayload.properties());
     }
@@ -236,7 +236,7 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(0));
-        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // IMPORTANT:  Call the static method you want to verify.
         // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event(any(), any());
     }
@@ -268,7 +268,7 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(0));
-        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // IMPORTANT:  Call the static method you want to verify.
         // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event(any(),any());
     }
@@ -302,7 +302,7 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(1));
-        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // IMPORTANT:  Call the static method you want to verify.
         // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event(trackPayload.event(), trackPayload.properties());
     }
@@ -332,7 +332,7 @@ public class FullStorySegmentMiddlewareTest {
         fullStorySegmentMiddleware.intercept(mockChain);
 
         verifyStatic(FS.class, VerificationModeFactory.times(1));
-        // IMPORTANT:  Call the static method you want to verify. Also applies to the tests below
+        // IMPORTANT:  Call the static method you want to verify.
         // see Mokito document here: https://github.com/powermock/powermock/wiki/mockito#a-full-example-for-mocking-stubbing--verifying-static-method
         FS.event(trackPayload.event(), trackPayload.properties());
     }
