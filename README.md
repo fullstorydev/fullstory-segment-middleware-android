@@ -126,6 +126,7 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
       Analytics analytics = new Analytics
           .Builder(getApplicationContext(), "your_key")
           .useSourceMiddleware(fsm)
+          .build();
       ```
 
 3. Your integration is now ready. 
