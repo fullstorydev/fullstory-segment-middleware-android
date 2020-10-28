@@ -17,6 +17,7 @@ import static com.segment.analytics.internal.Utils.getSegmentSharedPreferences;
 import static com.segment.analytics.internal.Utils.isNullOrEmpty;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class FullStorySegmentMiddleware implements Middleware {
     public boolean enableFSSessionURLInEvents = true;
     public boolean enableSendScreenAsEvents = false;
     public boolean allowlistAllTrackEvents = false;
-    ArrayList<String> allowlistedEvents;
+    List<String> allowlistedEvents;
 
 
     private final String TAG = "FullStoryMiddleware";
@@ -40,7 +41,7 @@ public class FullStorySegmentMiddleware implements Middleware {
      * @param segmentTag      Segment tag if not set this should be the same as segment write key
      * @param allowlistEvents allowlist any events that you would like to be passed to FullStory automatically
      */
-    public FullStorySegmentMiddleware(Context context, String segmentTag, ArrayList<String> allowlistEvents) {
+    public FullStorySegmentMiddleware(Context context, String segmentTag, List<String> allowlistEvents) {
         this.allowlistedEvents = allowlistEvents;
 
         // Analytics reset does not use middleware, so we need to listen to when the userID becomes null in shared preference and call anonymize to logout the user properly
