@@ -25,7 +25,6 @@ With this API, you can also record what Segment calls traits (`userVars` in Full
 
 The middleware automatically hooks into Segment's API: `Analytics.identify` that sends the user ID and traits to FullStory
 
-<br />
 
 - Anonymize the user at logout
 
