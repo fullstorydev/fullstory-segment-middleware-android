@@ -8,7 +8,7 @@ With minimal code changes, the FullStory Segment Middleware provides developers 
 
 <br/>
 
-### More information:
+### More information
 --- 
 [Segment Middleware for Android](https://segment.com/docs/connections/sources/catalog/libraries/mobile/android/middleware/)
 
