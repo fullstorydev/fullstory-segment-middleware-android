@@ -1,21 +1,22 @@
-# fullstory-segment-middleware-android
+# FullStory Segment Middleware Android
 
-## Note: This project is currently under development. 
+## Note: This project is currently under development
+
 Segment is a customer data platform that unifies data collection and provides data to every team in your company. The middleware is a easy way to integrate FullStory with the Segment Analytics for Android SDK.
 
 With minimal code changes, the FullStory Segment Middleware provides developers the ability to send Segment Analytics data to FullStory, and adds FullStory session replay links to Segment events.
 
-
 ### More information
+
+[FullStory Getting Started with Android Recording](https://help.fullstory.com/hc/en-us/articles/360040596093-Getting-Started-with-Android-Recording)
+
 [Segment Middleware for Android](https://segment.com/docs/connections/sources/catalog/libraries/mobile/android/middleware/)
 
 FullStory's KB Article: [FullStory Integration with Segment Technical Guide - Mobile](https://help.fullstory.com/hc/en-us/articles/360051691994-FullStory-Integration-with-Segment-Technical-Guide-Mobile-Beta-)
 
-
 ## Sending data to FullStory using Middleware
 
-
-### Handle Login/Logout 
+### Handle Login/Logout
 
 #### Identify a user and their traits at login
 
@@ -25,15 +26,14 @@ With this API, you can also record what Segment calls traits (`userVars` in Full
 
 The middleware automatically hooks into Segment's API: `Analytics.identify` that sends the user ID and traits to FullStory
 
-
 #### Anonymize the user at logout
 
 If your app supports login/logout, then you need to anonymize logged in users when they log out by calling `Analytics.reset` to clear Segment cache and anonymize the user. Make sure you set the correct segment tag when initializing FullStoryMiddleware. See implementation details below.
 
 Alternatively, you can manually call `FS.anonymize` after Analytics.reset, see below section "Manual Client-side integration" for more information
 
-
 ### Custom events
+
 Similar to identify, we can automatically hook into `Analytics.track` and `Analytics.screen` events and funnel the data to FullStory session replay.
 
 Note that by default, no track or screen events are recorded as custom events. Learn more about our [Privacy by Default](https://help.fullstory.com/hc/en-us/articles/360044349073-FullStory-Private-by-Default) approach.
@@ -44,8 +44,8 @@ We will log to FullStory that a Segment API is called but omit all data if the e
 
 All custom events are searchable in FullStory. You can find and view sessions that match your search criteria.
 
-
 ## Add FS session replay URL to Segment events using Middleware
+
 With FullStory for Mobile Apps, you can retrieve a link to the session replay and attach it to any Segment event.
 
 - By default we automatically insert the FullStory session replay URL as part of the Segment track and screen event properties, and all event contexts.
@@ -56,44 +56,48 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
 
 - You can disable this behavior by setting enableFSSessionURLInEvent to false
 
-
-
 ## Implementation Guide
-1. Before you begin, make sure you have both FullStory and Segment setup in your application: 
+
+1. Before you begin, make sure you have both FullStory and Segment setup in your application:
+
     - Add FullStory to your Android app
+
     - Use Gradle to add as dependencies:
+
       - Android (via jitpack):  Root build.gradle:
 
-      ```
+      ```gradle
       allprojects {
           repositories {
               ...
               maven {
-                  url 'https://jitpack.io' 
+                  url 'https://jitpack.io'
               }
           }
       }
       ```
 
-      - App level build.gradle: 
-      ```
+      - App level build.gradle:
+
+      ```gradle
       implementation 'com.github.fullstorydev:fullstory-segment-middleware-android:1.0-SNAPSHOT'
       ```
 
     - Alternatively, download the files manually:
-      - Add the files inside [FullStoryMiddleware](https://github.com/fullstorydev/fullstory-segment-middleware-android/tree/master/fullstory-segment-middleware/src/main/java/com/fullstorydev/fullstory_segment_middleware)  to your Android project
 
+      - Add the files inside [FullStoryMiddleware](https://github.com/fullstorydev/fullstory-segment-middleware-android/tree/master/fullstory-segment-middleware/src/main/java/com/fullstorydev/fullstory_segment_middleware)  to your Android project
 
 2. Add the middleware during the initialization of your segment analytics client to enable FullStory.
 
-    - Create FullStoryMiddleware with appropriate settings 
-      ```
+    - Create FullStoryMiddleware with appropriate settings
+
+      ```java
       // use the same values as Segment builder requires
-      // if you set a segment tag explicitly, 
+      // if you set a segment tag explicitly,
       // use the same tag rather than the write key to init FullStoryMiddleware
-      FullStoryMiddleware fsm = new FullStoryMiddleware(getApplicationContext()
-                                                , "write_key"
-                                                , ["Order Completed",
+      FullStoryMiddleware fsm = new FullStoryMiddleware(getApplicationContext(),
+                                                "write_key",
+                                                ["Order Completed",
                                                   "Viewed Checkout Step",
                                                   "Completed Checkout Step"]);
 
@@ -117,4 +121,4 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
           .build();
       ```
 
-3. Your integration is now ready. 
+3. Your integration is now ready.
