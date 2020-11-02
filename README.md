@@ -4,7 +4,7 @@
 --- 
 Segment is a customer data platform that unifies data collection and provides data to every team in your company. The middleware is a easy way to integrate FullStory with the Segment Analytics for Android SDK.
 
-With minimal code change, the FullStory Segment Middleware provide developers the ability to send Segment Analytics data to FullStory, and adding FullStory session replay links to Segment events.
+With minimal code changes, the FullStory Segment Middleware provides developers the ability to send Segment Analytics data to FullStory, and adds FullStory session replay links to Segment events.
 
 <br/>
 
