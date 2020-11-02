@@ -37,7 +37,7 @@ The middleware automatically hook into Segment API: `Analytics.identify` that se
 
 If your app supports login/logout, then you need to anonymize logged in users when they log out by calling `Analytics.reset` to clear Segment cache and anonymize this user. Make sure you set the correct segment tag when initializing FullStoryMiddleware. See implementation details below.
 
-Alternatively, you can manually call `FS.anonymize` after Analytics.reset, see below section "Client side integration - Manual" for more information
+Alternatively, you can manually call `FS.anonymize` after Analytics.reset, see below section "Manual Client-side integration" for more information
 
 <br />
 
