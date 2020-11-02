@@ -56,7 +56,6 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
 
 - You can disable this behavior by setting enableFSSessionURLInEvent to false
 
-<br />
 
 
 ## Implementation Guide: 
