@@ -32,7 +32,6 @@ If your app supports login/logout, then you need to anonymize logged in users wh
 
 Alternatively, you can manually call `FS.anonymize` after Analytics.reset, see below section "Manual Client-side integration" for more information
 
-<br />
 
 ### Custom events
 Similar to identify, we can automatically hook into `Analytics.track` and `Analytics.screen` events and funnel the data to FullStory session replay.
