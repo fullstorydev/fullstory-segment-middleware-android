@@ -60,7 +60,7 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
 
 1. Before you begin, make sure you have both FullStory and Segment setup in your application:
 
-    - Add FullStory to your Android app
+    - Add FullStory to your Android app: [Getting Started with Android Recording](https://help.fullstory.com/hc/en-us/articles/360040596093-Getting-Started-with-Android-Recording)
 
     - Use Gradle to add as dependencies:
 
