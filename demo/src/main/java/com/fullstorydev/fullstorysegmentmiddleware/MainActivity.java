@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private String ORDER_COMPLETED = "Order Completed";
     private String VIEWED_CHECKOUT_STEP = "Viewed Checkout Step";
     private String COMPLETED_CHECKOUT_STEP= "Completed Checkout Step";
-    List<String> allowListedEvents;
+    List<String> allowListedEvents = Arrays.asList(ORDER_COMPLETED, VIEWED_CHECKOUT_STEP, COMPLETED_CHECKOUT_STEP);;
 
 
     @Override
@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
         // use the same values as Segment builder requires
         // if you set a segment tag explicitly,
         // use the same tag rather than the write key to init FullStoryMiddleware
-
-        allowListedEvents = Arrays.asList(ORDER_COMPLETED, VIEWED_CHECKOUT_STEP, COMPLETED_CHECKOUT_STEP);
         FullStorySegmentMiddleware fsm = new FullStorySegmentMiddleware(getApplicationContext()
                 , BuildConfig.SEGMENT_WRITE_KEY
                 , (allowListedEvents));
