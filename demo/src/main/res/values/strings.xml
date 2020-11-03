@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FullstorySegmentMiddleware</string>
+    <string name="event_product_viewed">Product Viewed</string>
+    <string name="event_order_completed">Order Completed</string>
+    <string name="event_viewed_checkout_step">Viewed Checkout Step</string>
+    <string name="event_completed_checkout_step">Completed Checkout Step</string>
 </resources>
