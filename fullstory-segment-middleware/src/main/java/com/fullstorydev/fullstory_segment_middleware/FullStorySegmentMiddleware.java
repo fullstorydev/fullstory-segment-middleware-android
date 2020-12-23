@@ -28,6 +28,7 @@ public class FullStorySegmentMiddleware implements Middleware {
     public boolean enableFSSessionURLInEvents = true;
     public boolean enableSendScreenAsEvents = false;
     public boolean allowlistAllTrackEvents = false;
+    public boolean enableIdentifyEvents = true;
     List<String> allowlistedEvents;
 
 
@@ -100,8 +101,11 @@ public class FullStorySegmentMiddleware implements Middleware {
 
             case identify:
                 IdentifyPayload identifyPayload = (IdentifyPayload) payload;
-                FSSuffixedProperties traits = new FSSuffixedProperties(identifyPayload.traits());
-                FS.identify(identifyPayload.userId(), traits.getSuffixedProperties());
+                // optionally disabled with enableIdentifyEvents
+                if (this.enableIdentifyEvents) {
+                  FSSuffixedProperties traits = new FSSuffixedProperties(identifyPayload.traits());
+                  FS.identify(identifyPayload.userId(), traits.getSuffixedProperties());
+                }
                 break;
 
             case screen:

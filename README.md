@@ -22,7 +22,7 @@ FullStory's KB Article: [FullStory Integration with Segment Technical Guide - Mo
 
 Similar to `FS.identify`, Segment has an `Analytics.identify` API that lets you tie a user’s identity to their actions and recordings in order to help you understand their journey.
 
-With this API, you can also record what Segment calls traits (`userVars` in FullStory) about your users, like their email, name, preferences, etc. 
+With this API, you can also record what Segment calls traits (`userVars` in FullStory) about your users, like their email, name, preferences, etc.
 
 The middleware automatically hooks into Segment's API: `Analytics.identify` that sends the user ID and traits to FullStory
 
@@ -114,6 +114,9 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
       // alternatively allow list that you would like to track
       // default to false
       fsm.allowlistAllTrackEvents = true;
+      // enable Segment identify event to be sent as FS identify event
+      // default to true
+      fsm.enableIdentifyEvents = true;
 
       Analytics analytics = new Analytics
           .Builder(getApplicationContext(), "your_key")
