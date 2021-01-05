@@ -17,7 +17,12 @@ android {
         versionName "1.0"
         multiDexEnabled true
 
-        buildConfigField("String", "SEGMENT_WRITE_KEY", properties['SEGMENT_WRITE_KEY'])
+        // jitpack build fails because of nil SEGMENT_WRITE_KEY
+        if(properties['SEGMENT_WRITE_KEY'] != null) {
+            buildConfigField("String", "SEGMENT_WRITE_KEY", properties['SEGMENT_WRITE_KEY'])
+        } else {
+            buildConfigField("String", "SEGMENT_WRITE_KEY", "")
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
