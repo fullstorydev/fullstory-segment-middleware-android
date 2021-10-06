@@ -93,7 +93,7 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
 
       ```java
       // use the same values as Segment builder uses. By default use your segment write key
-      // if you set a custome segment tag explicitly (see below),
+      // if you set a custom segment, tag explicitly (see below),
       // use the same tag rather than the write key to init FullStoryMiddleware
       FullStoryMiddleware fsm = new FullStoryMiddleware(getApplicationContext(),
                                                 "write_key",
