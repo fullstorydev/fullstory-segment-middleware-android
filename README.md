@@ -89,11 +89,11 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
 
 2. Add the middleware during the initialization of your segment analytics client to enable FullStory.
 
-    - Create FullStoryMiddleware with appropriate settings
+    - Create FullStoryMiddleware with appropriate settings. 
 
       ```java
-      // use the same values as Segment builder requires
-      // if you set a segment tag explicitly,
+      // use the same values as Segment builder uses. By default, uses your segment write key
+      // if you set a custom segment, tag explicitly (see below),
       // use the same tag rather than the write key to init FullStoryMiddleware
       FullStoryMiddleware fsm = new FullStoryMiddleware(getApplicationContext(),
                                                 "write_key",
@@ -123,5 +123,7 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
           .useSourceMiddleware(fsm)
           .build();
       ```
+      
+    > To set a custom tag for your Segment instance, use the [`tag` function](https://github.com/segmentio/analytics-android/blob/d263870011fc92e88f16d7ae35a53d8a9883ba7c/analytics/src/main/java/com/segment/analytics/Analytics.java#L1188) when building your Segment client.
 
 3. Your integration is now ready.
