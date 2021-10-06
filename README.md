@@ -124,6 +124,6 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
           .build();
       ```
       
-    > To set a custom tag for your segment instance, use the [`tag` function](https://github.com/segmentio/analytics-android/blob/d263870011fc92e88f16d7ae35a53d8a9883ba7c/analytics/src/main/java/com/segment/analytics/Analytics.java#L1188) when building your segment client.
+    > To set a custom tag for your Segment instance, use the [`tag` function](https://github.com/segmentio/analytics-android/blob/d263870011fc92e88f16d7ae35a53d8a9883ba7c/analytics/src/main/java/com/segment/analytics/Analytics.java#L1188) when building your Segment client.
 
 3. Your integration is now ready.
