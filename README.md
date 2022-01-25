@@ -125,3 +125,12 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
     > To set a custom tag for your Segment instance, use the [`tag` function](https://github.com/segmentio/analytics-android/blob/d263870011fc92e88f16d7ae35a53d8a9883ba7c/analytics/src/main/java/com/segment/analytics/Analytics.java#L1188) when building your Segment client.
 
 3. Your integration is now ready.
+
+#### Local Develop
+The `demo` app is included in the project. By default the demo app is excluded from the build, add the following line and sync gradle to include it.
+
+```
+include.demo=true
+```
+
+You should now see the `demo` module, and should be able to run the demo app against the local version of the middleware and make or apply changes.
