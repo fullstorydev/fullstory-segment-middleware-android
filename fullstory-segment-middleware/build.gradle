@@ -38,7 +38,7 @@ dependencies {
         maven { url "https://maven.fullstory.com" }
     }
 
-    compileOnly 'com.fullstory:instrumentation-full:1.4.0@aar'
+    compileOnly 'com.fullstory:instrumentation-full:1.23.0@aar'
     compileOnly 'com.segment.analytics.android:analytics:4.7.1'
 
     testImplementation 'junit:junit:4.12'
