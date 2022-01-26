@@ -1,3 +1,8 @@
 include ':fullstory-segment-middleware'
-include ':demo'
 rootProject.name = "FullstorySegmentMiddleware"
+
+Properties properties = new Properties()
+properties.load(file('local.properties').newDataInputStream())
+if (properties.getProperty('include.demo')) {
+    include ':demo'
+}
