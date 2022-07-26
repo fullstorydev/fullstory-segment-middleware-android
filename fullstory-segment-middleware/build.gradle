@@ -39,7 +39,7 @@ dependencies {
     }
 
     compileOnly 'com.fullstory:instrumentation-full:1.23.0@aar'
-    compileOnly 'com.segment.analytics.android:analytics:4.7.1'
+    compileOnly 'com.segment.analytics.android:analytics:4.+'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'
