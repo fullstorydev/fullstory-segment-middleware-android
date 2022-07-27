@@ -78,7 +78,7 @@ With FullStory for Mobile Apps, you can retrieve a link to the session replay an
       - App level build.gradle:
 
       ```gradle
-      implementation 'com.github.fullstorydev:fullstory-segment-middleware-android:1.2.2'
+      implementation 'com.github.fullstorydev:fullstory-segment-middleware-android:1.2.3'
       ```
 
     - Alternatively, download the files manually:
